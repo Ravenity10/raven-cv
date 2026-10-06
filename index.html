@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>John Raven Delos Reyes | WordPress Developer</title>
+    <meta
+      name="description"
+      content="John Raven M. Delos Reyes is a WordPress developer building custom themes with ACF, custom post types, bespoke plugins and payment, CRM and email integrations."
+    />
+    <meta name="author" content="John Raven M. Delos Reyes" />
+    <meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0d0f13" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="John Raven Delos Reyes | WordPress Developer" />
+    <meta
+      property="og:description"
+      content="Custom WordPress themes, ACF, custom post types, plugin development and third-party integrations."
+    />
+    <meta property="og:url" content="%VITE_SITE_URL%/" />
+    <meta property="og:image" content="%VITE_SITE_URL%/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="John Raven Delos Reyes, WordPress Developer" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="John Raven Delos Reyes | WordPress Developer" />
+    <meta
+      name="twitter:description"
+      content="Custom WordPress themes, ACF, custom post types, plugin development and third-party integrations."
+    />
+    <meta name="twitter:image" content="%VITE_SITE_URL%/og-image.png" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Loaded without blocking render; system fonts show until the web fonts arrive. -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=JetBrains+Mono:wght@400;500&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=JetBrains+Mono:wght@400;500&display=swap"
+      />
+    </noscript>
+
+    <!-- Applies the saved or system theme before first paint to avoid a flash. -->
+    <script>
+      (function () {
+        var theme;
+        try {
+          theme = localStorage.getItem('theme');
+        } catch (e) {}
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        var root = document.documentElement;
+        root.classList.toggle('dark', theme === 'dark');
+        root.style.colorScheme = theme;
+      })();
+    </script>
+  </head>
+  <body>
+    <!-- Without JavaScript, show content that would otherwise wait for its scroll reveal. -->
+    <noscript>
+      <style>
+        #root [style*='opacity:0'] {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      </style>
+    </noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

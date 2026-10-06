@@ -1,0 +1,168 @@
+@import 'tailwindcss';
+
+/* Class strategy: .dark on <html>, set before paint by the inline script in index.html. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  Colour tokens. Contrast (WCAG AA) checked against --bg and --surface:
+  light: fg 16.6:1, muted 5.9-6.9:1, accent 6.0-6.5:1, accent-fg on accent 6.5:1
+  dark:  fg 16.5:1, muted 6.9-8.1:1, accent 7.8-8.4:1, accent-fg on accent 8.4:1
+*/
+:root {
+  --bg: #f7f5f0;
+  --surface: #ffffff;
+  --surface-2: #efece4;
+  --fg: #14161a;
+  --muted: #545a65;
+  --border: #dcd8ce;
+  --accent: #2f4fd8;
+  --accent-fg: #ffffff;
+  --accent-soft: #e3e8fc;
+  --ring: #2f4fd8;
+}
+
+.dark {
+  --bg: #0d0f13;
+  --surface: #15181e;
+  --surface-2: #1c2028;
+  --fg: #eceef2;
+  --muted: #a3a9b5;
+  --border: #2a2f39;
+  --accent: #94a6ff;
+  --accent-fg: #0d0f13;
+  --accent-soft: #1d2340;
+  --ring: #94a6ff;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-ring: var(--ring);
+}
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@layer base {
+  html {
+    scroll-padding-top: 4rem; /* sticky header height */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-fg);
+  }
+
+  /* One visible focus style for every interactive element, both themes. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .container-page {
+      padding-inline: 2rem;
+    }
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, var(--border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+}
+
+/* Hero entrance. CSS rather than Motion so it runs from the pre-rendered HTML. */
+@keyframes word-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.6em);
+  }
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+.anim-word,
+.anim-fade-up {
+  animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--d, 0s);
+}
+.anim-word {
+  display: inline-block;
+  animation-name: word-in;
+  animation-duration: 0.7s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-word,
+  .anim-fade-up {
+    animation-name: fade-in;
+    animation-duration: 0.3s;
+  }
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
