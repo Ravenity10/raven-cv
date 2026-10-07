@@ -386,11 +386,10 @@
     transform: translateY(16px);
   }
 }
-@keyframes blur-in {
+@keyframes word-in {
   from {
     opacity: 0;
-    filter: blur(16px);
-    transform: translateY(24px) scale(0.98);
+    transform: translateY(0.6em);
   }
 }
 @keyframes fade-in {
@@ -398,23 +397,53 @@
     opacity: 0;
   }
 }
+.anim-word,
 .anim-fade-up {
   animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: var(--d, 0s);
 }
-.anim-blur-in {
-  animation: blur-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: var(--d, 0s);
+.anim-word {
+  display: inline-block;
+  animation-name: word-in;
+  animation-duration: 0.7s;
+}
+/* The gradient pan runs alongside the entrance on the highlighted heading line. */
+.anim-word.text-gradient {
+  animation:
+    word-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) both,
+    gradient-pan 10s linear infinite;
+}
+
+/* Hero code window: a slow bob and a blinking caret. */
+@keyframes float {
+  50% {
+    transform: translateY(-10px);
+  }
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+.code-float {
+  isolation: isolate;
+  animation: float 6s ease-in-out infinite;
+}
+.caret {
+  animation: blink 1.1s steps(1) infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .anim-word,
   .anim-fade-up,
-  .anim-blur-in {
-    animation-name: fade-in;
-    animation-duration: 0.3s;
+  .anim-word.text-gradient {
+    animation: fade-in 0.3s both;
+    animation-delay: var(--d, 0s);
   }
   .text-gradient,
   .orb,
+  .code-float,
+  .caret,
   .pulse-dot::after {
     animation: none;
   }

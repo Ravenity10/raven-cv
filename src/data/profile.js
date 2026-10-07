@@ -41,33 +41,12 @@ export const ui = {
 };
 
 export const hero = {
-  eyebrow: `Based in ${profile.locationShort}`,
-  name: profile.shortName,
-  role: profile.role,
-  intro: `I build WordPress sites that are easy to edit and hard to break. For ${YEARS_EXPERIENCE} years that has meant custom themes, ACF-driven content, bespoke plugins and the integrations that connect a site to payments, CRMs and email.`,
-  // Strings are plain text; objects are highlighted in their colour tone.
-  career: [
-    'Senior WordPress Developer at ',
-    { text: 'TechZ Digital', tone: 'tone-blue' },
-    ', previously at ',
-    { text: 'IFormatLogic', tone: 'tone-purple' },
-  ],
+  eyebrow: `${profile.role} · ${profile.locationShort}`,
+  // Each string is one line of the heading; words reveal in sequence. The last line is highlighted.
+  headingLines: ['WordPress sites that are', 'easy to edit and', 'hard to break.'],
+  intro: `I'm ${profile.name}. For ${YEARS_EXPERIENCE} years I've built custom themes, ACF-driven content, bespoke plugins and the integrations that connect a site to payments, CRMs and email.`,
   techLabel: 'Core stack',
   tech: ['PHP', 'WordPress', 'WooCommerce', 'ACF Pro', 'JavaScript'],
-  focus: [
-    {
-      title: 'Themes & Content',
-      points: ['Custom themes from Figma or XD', 'ACF flexible content layouts', 'Custom post types and taxonomies'],
-    },
-    {
-      title: 'Plugins & Integrations',
-      points: ['Bespoke plugins and REST endpoints', 'Stripe, Square and PayPal payments', 'CRMs, mailing lists and SMTP'],
-    },
-    {
-      title: 'Stores & Site Care',
-      points: ['WooCommerce stores and bookings', 'Caching and performance tuning', 'Malware clean-up and hardening'],
-    },
-  ],
   primaryCta: { label: 'See my work', href: '#projects' },
   secondaryCta: { label: 'Email me', href: `mailto:${profile.email}` },
   cvCta: profile.cv.label,
@@ -76,6 +55,17 @@ export const hero = {
     { value: 'PROJECT_COUNT', label: 'live client sites featured' },
     { value: 'PHP / JS', label: 'theme to plugin to API' },
   ],
+  snippetLabel: 'functions.php',
+  snippet: `add_action( 'init', function () {
+  register_post_type( 'project', [
+    'label'        => 'Projects',
+    'public'       => true,
+    'show_in_rest' => true,
+    'has_archive'  => true,
+    'supports'     => [ 'title', 'editor', 'thumbnail' ],
+  ] );
+} );`,
+  snippetCaption: 'Clean structure first. Then the design.',
 };
 
 export const about = {
