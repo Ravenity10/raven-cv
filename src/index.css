@@ -90,7 +90,7 @@
 
 @layer base {
   html {
-    scroll-padding-top: 4rem; /* sticky header height */
+    scroll-padding-top: 5rem; /* sticky header height */
     -webkit-text-size-adjust: 100%;
   }
 
@@ -199,6 +199,16 @@
   .btn-brand:hover {
     transform: translateY(-2px);
     box-shadow: 0 16px 40px -12px rgb(124 58 237 / 0.85);
+  }
+
+  /* Name in the hero intro: a soft brand-gradient marker under the lower half of the text. */
+  .name-highlight {
+    background-image: linear-gradient(90deg, color-mix(in srgb, var(--grad-1) 30%, transparent), color-mix(in srgb, var(--grad-2) 30%, transparent));
+    background-repeat: no-repeat;
+    background-size: 100% 0.4em;
+    background-position: 0 88%;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
   }
 
   .bg-brand-strong {

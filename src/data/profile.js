@@ -27,7 +27,8 @@ export const navItems = [
   { id: 'projects', label: 'Projects' },
   { id: 'experience', label: 'Experience' },
   { id: 'services', label: 'Services' },
-  { id: 'contact', label: 'Contact' },
+  // `cta` renders the item as the filled button at the end of the nav.
+  { id: 'contact', label: 'Contact', cta: true },
 ];
 
 export const ui = {
@@ -43,17 +44,19 @@ export const ui = {
 export const hero = {
   eyebrow: `${profile.role} · ${profile.locationShort}`,
   // Each string is one line of the heading; words reveal in sequence. The last line is highlighted.
-  headingLines: ['WordPress sites that are', 'easy to edit and', 'hard to break.'],
-  intro: `I'm ${profile.name}. For ${YEARS_EXPERIENCE} years I've built custom themes, ACF-driven content, bespoke plugins and the integrations that connect a site to payments, CRMs and email.`,
+  headingLines: ['Custom WordPress,', 'engineered to', 'perform & last.'],
+  // Rendered as "I'm <name>" (highlighted) followed by introBody.
+  introLead: "I'm",
+  introBody: `, a WordPress developer with ${YEARS_EXPERIENCE}+ years turning designs into fast, secure websites that teams can update with confidence. I craft bespoke themes, ACF-powered content models and purpose-built plugins, then connect them to the payments, CRMs and email platforms a business runs on.`,
   techLabel: 'Core stack',
   tech: ['PHP', 'WordPress', 'WooCommerce', 'ACF Pro', 'JavaScript'],
-  primaryCta: { label: 'See my work', href: '#projects' },
-  secondaryCta: { label: 'Email me', href: `mailto:${profile.email}` },
+  primaryCta: { label: 'View my work', href: '#projects' },
+  secondaryCta: { label: "Let's talk", href: `mailto:${profile.email}` },
   cvCta: profile.cv.label,
   stats: [
-    { value: `${YEARS_EXPERIENCE}+`, label: 'years building with WordPress' },
-    { value: 'PROJECT_COUNT', label: 'live client sites featured' },
-    { value: 'PHP / JS', label: 'theme to plugin to API' },
+    { value: `${YEARS_EXPERIENCE}+`, label: 'years crafting WordPress' },
+    { value: 'PROJECT_COUNT', label: 'live client builds showcased' },
+    { value: 'PHP / JS', label: 'from theme to plugin to API' },
   ],
   snippetLabel: 'functions.php',
   snippet: `add_action( 'init', function () {
@@ -65,7 +68,7 @@ export const hero = {
     'supports'     => [ 'title', 'editor', 'thumbnail' ],
   ] );
 } );`,
-  snippetCaption: 'Clean structure first. Then the design.',
+  snippetCaption: 'Solid architecture first. Polished design on top.',
 };
 
 export const about = {
@@ -129,7 +132,7 @@ export const contact = {
 };
 
 export const footer = {
-  note: 'Built with React, Tailwind CSS and Motion.',
+  rights: 'All rights reserved.',
   backToTop: 'Back to top',
 };
 

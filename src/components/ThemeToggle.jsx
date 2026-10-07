@@ -2,7 +2,7 @@ import { AnimatePresence, m } from 'motion/react';
 import { useTheme } from '../hooks/useTheme.js';
 import { ui } from '../data/profile.js';
 
-export default function ThemeToggle() {
+export default function ThemeToggle({ className = 'size-10' }) {
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark';
   const label = isDark ? ui.themeToLight : ui.themeToDark;
@@ -13,7 +13,7 @@ export default function ThemeToggle() {
       onClick={toggleTheme}
       aria-label={label}
       title={label}
-      className="relative grid size-10 place-items-center overflow-hidden rounded-full border border-line bg-surface text-fg transition-colors hover:border-accent hover:text-accent"
+      className={`glass relative grid place-items-center overflow-hidden rounded-full border border-line text-fg transition-[color,border-color,box-shadow] hover:border-accent hover:text-accent ${className}`}
     >
       <AnimatePresence mode="wait" initial={false}>
         <m.svg

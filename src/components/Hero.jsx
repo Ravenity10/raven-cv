@@ -1,6 +1,6 @@
 import { Fragment, useRef } from 'react';
 import { m, useReducedMotion, useScroll, useTransform } from 'motion/react';
-import { hero } from '../data/profile.js';
+import { hero, profile } from '../data/profile.js';
 import { projects } from '../data/projects.js';
 import { scrollToTarget } from '../hooks/useSmoothScroll.js';
 import { toneAt } from './tones.js';
@@ -99,7 +99,9 @@ export default function Hero() {
           </h1>
 
           <p className="anim-fade-up mt-6 max-w-xl text-lg leading-relaxed text-muted text-pretty" style={delay(afterHeading)}>
-            {hero.intro}
+            {hero.introLead}{' '}
+            <strong className="name-highlight font-semibold text-fg">{profile.name}</strong>
+            {hero.introBody}
           </p>
 
           <ul aria-label={hero.techLabel} className="anim-fade-up mt-6 flex flex-wrap gap-2" style={delay(afterHeading + 0.05)}>
