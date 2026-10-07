@@ -10,8 +10,7 @@
       content="John Raven M. Delos Reyes is a WordPress developer building custom themes with ACF, custom post types, bespoke plugins and payment, CRM and email integrations."
     />
     <meta name="author" content="John Raven M. Delos Reyes" />
-    <meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0d0f13" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#05070e" />
     <meta name="color-scheme" content="light dark" />
 
     <meta property="og:type" content="website" />
@@ -53,7 +52,7 @@
       />
     </noscript>
 
-    <!-- Applies the saved or system theme before first paint to avoid a flash. -->
+    <!-- Applies the saved theme (dark by default) before first paint to avoid a flash. -->
     <script>
       (function () {
         var theme;
@@ -61,7 +60,7 @@
           theme = localStorage.getItem('theme');
         } catch (e) {}
         if (theme !== 'light' && theme !== 'dark') {
-          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          theme = 'dark';
         }
         var root = document.documentElement;
         root.classList.toggle('dark', theme === 'dark');

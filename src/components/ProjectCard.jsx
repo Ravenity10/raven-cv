@@ -1,6 +1,7 @@
 import { m, useMotionValue, useReducedMotion, useSpring, useTransform } from 'motion/react';
 import { projectsCopy } from '../data/profile.js';
 import { revealItem } from './Reveal.jsx';
+import { toneAt } from './tones.js';
 
 const MAX_TILT = 6;
 const spring = { stiffness: 220, damping: 20, mass: 0.6 };
@@ -39,7 +40,7 @@ export default function ProjectCard({ project, onOpen }) {
         onPointerLeave={reset}
         style={reduce ? undefined : { rotateX, rotateY }}
         whileHover={reduce ? undefined : { y: -4 }}
-        className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-sm transition-[border-color,box-shadow] hover:border-accent hover:shadow-xl hover:shadow-black/10 has-[button:focus-visible]:border-accent has-[button:focus-visible]:ring-2 has-[button:focus-visible]:ring-ring has-[button:focus-visible]:ring-offset-2 has-[button:focus-visible]:ring-offset-bg"
+        className="spotlight hover-glow group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-sm transition-[border-color,box-shadow] duration-300 hover:border-accent has-[button:focus-visible]:border-accent has-[button:focus-visible]:ring-2 has-[button:focus-visible]:ring-ring has-[button:focus-visible]:ring-offset-2 has-[button:focus-visible]:ring-offset-bg"
       >
         <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-line bg-surface-2">
           {project.image ? (
@@ -74,8 +75,8 @@ export default function ProjectCard({ project, onOpen }) {
           </h3>
           <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted">{project.description}</p>
           <ul className="mt-4 flex flex-wrap gap-1.5" aria-label={projectsCopy.tagsLabel}>
-            {project.tags.map((tag) => (
-              <li key={tag} className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-fg">
+            {project.tags.map((tag, index) => (
+              <li key={tag} className={`chip ${toneAt(index)} !px-2.5 !py-1 !text-xs`}>
                 {tag}
               </li>
             ))}

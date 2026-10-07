@@ -1,23 +1,5 @@
 [
   {
-    "name": "Gallions Reach",
-    "url": "https://gallions-reach.co.uk",
-    "description": "[inferred] Destination website for a retail and leisure park, with directories for shops, places to eat, events and jobs.",
-    "features": [
-      "Bespoke \"thefort\" theme built on an HTML5 Blank base",
-      "Custom post types for shops, eating, what's on, events, jobs and news, plus a shop category taxonomy",
-      "Instant Ajax search across site content",
-      "GA4 analytics loaded through a dedicated must-use plugin"
-    ],
-    "tags": [
-      "Custom theme",
-      "Custom post types",
-      "Taxonomies",
-      "GA4"
-    ],
-    "evidence": "Project CLAUDE.md (theme, mu-plugin); public REST API /wp/v2/types and /wp/v2/taxonomies; homepage asset paths"
-  },
-  {
     "name": "Grasslands Turf",
     "url": "https://grasslands-turf.co.uk",
     "description": "Turf and topsoil supplier site with an online shop, trade accounts and practical lawn-care tools.",
@@ -34,6 +16,112 @@
       "Gravity Forms"
     ],
     "evidence": "Project CLAUDE.md (flexible content layouts); local theme files (calculator-turf.php, calculator-soil.php, page-lawn-calendar.php, page-trade-sign-up.php); local plugins folder (activation not verified)"
+  },
+  {
+    "name": "Performance Pathways",
+    "url": "https://platform.performancepathways.co.uk",
+    "description": "School sport education platform with lessons, CPD courses and resources designed by UK coaches, behind a member dashboard.",
+    "features": [
+      "Custom \"performance-patways\" theme with a logged-in member dashboard",
+      "Custom post types for lessons, classes, CPD courses, content and contributors",
+      "Nine custom taxonomies (level, subject, school year, learning pathway, equipment and more) for filtering the resource library",
+      "[inferred] Demo bookings and enquiries handled through Gravity Forms"
+    ],
+    "tags": [
+      "Custom theme",
+      "Custom post types",
+      "Taxonomies",
+      "Gravity Forms"
+    ],
+    "evidence": "Homepage asset paths; public REST API /wp/v2/types, /wp/v2/taxonomies and namespaces (gf/v2, cptui/v1)"
+  },
+  {
+    "name": "Khuvsgul Lake Research Hub",
+    "url": "https://khuvsgullakeresearch.com",
+    "description": "Research hub for the SMART-C project on Khuvsgul Lake, Mongolia, backed by the IMO and partner institutes.",
+    "features": [
+      "Custom \"smartc\" theme on an HTML5 Blank base, with an ACF section builder (timeline, gallery, team, posts carousel and more)",
+      "Scroll-driven hero that zooms from a 3D-rendered globe down to the lake, using five pre-built imagery layers",
+      "Custom post types for publications, Russian-language publications, data portal, news, media, projects and announcements",
+      "ACF field groups saved to acf-json so content structure is version-controlled"
+    ],
+    "tags": [
+      "Custom theme",
+      "ACF",
+      "Custom post types",
+      "Scroll animation"
+    ],
+    "evidence": "Local theme files (template-home.php, tools/build-hero-layers.php, acf-json, template-parts/sections); public REST API /wp/v2/types"
+  },
+  {
+    "name": "Safe & Sound Ultrasound Clinic",
+    "url": "https://safeandsoundultrasound.co.uk",
+    "description": "Private ultrasound clinic in North London offering pregnancy, gender, 4D and general health scans.",
+    "features": [
+      "[inferred] Bespoke \"foundation\" theme with a hero slider, scan menus and a patient testimonials carousel",
+      "Custom post types for services, team and blog, with service category, badge, gender and body-part taxonomies",
+      "Booking and enquiry forms built with Gravity Forms",
+      "Yoast SEO and Google Site Kit for local search visibility"
+    ],
+    "tags": [
+      "Custom theme",
+      "Custom post types",
+      "Gravity Forms",
+      "SEO"
+    ],
+    "evidence": "Homepage meta description and asset paths; public REST API namespaces (gravityforms/v2, yoast/v1, google-site-kit/v1), /wp/v2/types and /wp/v2/taxonomies"
+  },
+  {
+    "name": "Spa Valley Railway",
+    "url": "https://spavalleyrailway.co.uk",
+    "description": "[inferred] Website for a heritage railway, with site-wide notices managed by staff.",
+    "features": [
+      "ACF Options page controlling the header, footer and a site-wide alert popup",
+      "Automatic Cloudflare cache purge whenever the ACF options are saved",
+      "Alert popup shown once per visit using session storage"
+    ],
+    "tags": [
+      "ACF Options",
+      "Cloudflare",
+      "Performance"
+    ],
+    "evidence": "popup-fix/functions-cloudflare-purge.php and scripts-popup-block.js; siteurl from backup archive name"
+  },
+  {
+    "name": "Insafe",
+    "url": "https://insafe.com",
+    "description": "Company website for Insafe, including a branded online invoice payment page.",
+    "features": [
+      "Custom plugin for paying invoices online: Stripe Checkout with card, Apple Pay and Google Pay",
+      "Signed Stripe webhooks with idempotent fulfilment, so a payment never sends two receipts",
+      "Payment records custom post type in wp-admin, with branded customer and admin emails",
+      "Custom theme with ACF flexible content, plus trade and password-protected page templates"
+    ],
+    "tags": [
+      "Plugin development",
+      "Stripe",
+      "Webhooks",
+      "ACF"
+    ],
+    "evidence": "insafe-stripe-payment/README.md and PAY-INVOICE-SETUP.md; theme-backup files (page-trade.php, page-locked.php, get_field usage)"
+  },
+  {
+    "name": "Gallions Reach",
+    "url": "https://gallions-reach.co.uk",
+    "description": "[inferred] Destination website for a retail and leisure park, with directories for shops, places to eat, events and jobs.",
+    "features": [
+      "Bespoke \"thefort\" theme built on an HTML5 Blank base",
+      "Custom post types for shops, eating, what's on, events, jobs and news, plus a shop category taxonomy",
+      "Instant Ajax search across site content",
+      "GA4 analytics loaded through a dedicated must-use plugin"
+    ],
+    "tags": [
+      "Custom theme",
+      "Custom post types",
+      "Taxonomies",
+      "GA4"
+    ],
+    "evidence": "Project CLAUDE.md (theme, mu-plugin); public REST API /wp/v2/types and /wp/v2/taxonomies; homepage asset paths"
   },
   {
     "name": "Merriments Gardens",
@@ -69,94 +157,6 @@
       "SEO"
     ],
     "evidence": "Homepage asset paths; public REST API namespaces (gravitysmtp/v1, redirection/v1, yoast/v1) and post types (guide)"
-  },
-  {
-    "name": "Mini Monster Classes",
-    "url": "https://minimonsterclasses.co.uk",
-    "description": "Class booking site for Little Monster House of Fun, selling class places online.",
-    "features": [
-      "Custom \"monster\" theme",
-      "WooCommerce class bookings with Stripe, PayPal and Square payments",
-      "Gift cards and waitlists for sold-out classes",
-      "Database maintenance: 5,000+ legacy orders purged safely, database reduced from 154 MB to 106 MB"
-    ],
-    "tags": [
-      "WooCommerce",
-      "Payments",
-      "Square",
-      "Maintenance"
-    ],
-    "evidence": "Project README.md (site facts, maintenance log); homepage asset paths"
-  },
-  {
-    "name": "Monster Booking",
-    "url": "https://monsterbooking.co.uk",
-    "description": "Play session booking for Little Monsters House of Fun: pick a date, a table size and your guests, then pay online.",
-    "features": [
-      "Calendar booking up to 14 days ahead, with small, medium and large tables and live availability",
-      "Per-guest pricing by age group, with separate peak and off-peak rates",
-      "Tables held for 15 minutes in the cart, with coupon and gift card support",
-      "WooCommerce checkout with Square card payments and Google Pay"
-    ],
-    "tags": [
-      "WooCommerce",
-      "Bookings",
-      "Square",
-      "Google Pay"
-    ],
-    "evidence": "Booking-Flow-Steps.docx (booking flow walkthrough, captured 10 Sept 2026)"
-  },
-  {
-    "name": "MonsterMenu",
-    "url": "https://monstermenu.co.uk",
-    "description": "[inferred] Online food ordering for a family venue, built on WooCommerce.",
-    "features": [
-      "[inferred] Custom \"scoot-v2\" theme with ACF Pro fields",
-      "WooCommerce with product add-ons, custom order statuses and printable delivery notes",
-      "Square and Stripe payments",
-      "SMS order notifications and SMTP email delivery"
-    ],
-    "tags": [
-      "WooCommerce",
-      "ACF",
-      "Square",
-      "SMTP"
-    ],
-    "evidence": "Backup restore point: theme-versions.csv and plugin-versions.csv (active plugins), siteurl from database backup"
-  },
-  {
-    "name": "Insafe",
-    "url": "https://insafe.com",
-    "description": "Company website for Insafe, including a branded online invoice payment page.",
-    "features": [
-      "Custom plugin for paying invoices online: Stripe Checkout with card, Apple Pay and Google Pay",
-      "Signed Stripe webhooks with idempotent fulfilment, so a payment never sends two receipts",
-      "Payment records custom post type in wp-admin, with branded customer and admin emails",
-      "Custom theme with ACF flexible content, plus trade and password-protected page templates"
-    ],
-    "tags": [
-      "Plugin development",
-      "Stripe",
-      "Webhooks",
-      "ACF"
-    ],
-    "evidence": "insafe-stripe-payment/README.md and PAY-INVOICE-SETUP.md; theme-backup files (page-trade.php, page-locked.php, get_field usage)"
-  },
-  {
-    "name": "Spa Valley Railway",
-    "url": "https://spavalleyrailway.co.uk",
-    "description": "[inferred] Website for a heritage railway, with site-wide notices managed by staff.",
-    "features": [
-      "ACF Options page controlling the header, footer and a site-wide alert popup",
-      "Automatic Cloudflare cache purge whenever the ACF options are saved",
-      "Alert popup shown once per visit using session storage"
-    ],
-    "tags": [
-      "ACF Options",
-      "Cloudflare",
-      "Performance"
-    ],
-    "evidence": "popup-fix/functions-cloudflare-purge.php and scripts-popup-block.js; siteurl from backup archive name"
   },
   {
     "name": "Thuasne Store",

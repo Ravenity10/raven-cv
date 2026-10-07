@@ -1,4 +1,28 @@
 {
+  "grasslands-turf": {
+    "width": 1200,
+    "height": 750
+  },
+  "performance-pathways": {
+    "width": 1200,
+    "height": 750
+  },
+  "khuvsgul-lake-research-hub": {
+    "width": 1200,
+    "height": 750
+  },
+  "safe-sound-ultrasound-clinic": {
+    "width": 1200,
+    "height": 750
+  },
+  "spa-valley-railway": {
+    "width": 1200,
+    "height": 750
+  },
+  "insafe": {
+    "width": 1200,
+    "height": 750
+  },
   "gallions-reach": {
     "width": 1200,
     "height": 750
@@ -8,10 +32,6 @@
     "height": 750
   },
   "pii-brokers": {
-    "width": 1200,
-    "height": 750
-  },
-  "mini-monster-classes": {
     "width": 1200,
     "height": 750
   },

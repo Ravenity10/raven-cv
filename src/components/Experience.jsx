@@ -13,7 +13,7 @@ export default function Experience() {
 
         <div className="grid gap-12 lg:grid-cols-[1fr_18rem]">
           <ol className="space-y-12">
-            {experience.map((job) => (
+            {experience.map((job, jobIndex) => (
               <Reveal as="li" stagger={0.08} key={job.company} className="grid gap-4 md:grid-cols-[12rem_1fr] md:gap-8">
                 <m.div variants={revealItem}>
                   <h3 className="font-display text-2xl font-bold tracking-tight">{job.company}</h3>
@@ -21,10 +21,13 @@ export default function Experience() {
                   {job.location && <p className="mt-1 text-sm text-muted">{job.location}</p>}
                 </m.div>
 
-                <ol className="space-y-8 border-l border-line">
-                  {job.roles.map((role) => (
+                <ol className="timeline space-y-8">
+                  {job.roles.map((role, roleIndex) => (
                     <m.li key={role.title} variants={revealItem} className="relative pl-6 md:pl-8">
-                      <span aria-hidden="true" className="absolute -left-[5px] top-2 size-2.5 rounded-full bg-accent" />
+                      <span
+                        aria-hidden="true"
+                        className={`dot-glow absolute -left-[5px] top-2 size-2.5 rounded-full ${jobIndex === 0 && roleIndex === 0 ? 'pulse-dot !size-2.5' : 'bg-accent'}`}
+                      />
                       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                         <h4 className="font-display text-lg font-semibold tracking-tight">{role.title}</h4>
                         <span className="font-mono text-xs text-muted">{role.period}</span>
@@ -45,7 +48,7 @@ export default function Experience() {
           </ol>
 
           <Reveal as="aside" stagger={0.08} className="space-y-4 self-start lg:sticky lg:top-24">
-            <m.div variants={revealItem} className="rounded-2xl border border-line bg-surface p-6">
+            <m.div variants={revealItem} className="spotlight rounded-2xl border border-line bg-surface p-6">
               <h3 className="eyebrow">{experienceCopy.educationHeading}</h3>
               <ul className="mt-3 space-y-4">
                 {education.map((item) => (
@@ -60,7 +63,7 @@ export default function Experience() {
             <m.div variants={revealItem}>
               <CvLink
                 label={experienceCopy.cvLabel}
-                className="flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-accent-fg transition-transform hover:-translate-y-0.5"
+                className="btn-brand flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold"
               />
               <p className="mt-2 text-center font-mono text-xs text-muted">{profile.cv.fileName}</p>
             </m.div>

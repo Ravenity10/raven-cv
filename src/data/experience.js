@@ -19,7 +19,7 @@ export const experience = [
         title: 'Senior WordPress Developer',
         period: 'Nov 2024 - Present',
         points: [
-          'Lead Team Raven, a web development and digital marketing team, handling task allocation, code review and delivery across concurrent client projects.',
+          'Lead a web development and digital marketing team, handling task allocation, code review and delivery across concurrent client projects.',
           'Build custom WordPress themes and plugins with Advanced Custom Fields and custom post types, following WordPress Coding Standards and OOP principles for modular, maintainable code.',
           'Develop custom AJAX filtering and feed systems with optimized queries to keep content-heavy sites fast.',
           'Configure and troubleshoot WooCommerce stores, Gravity Forms workflows and SMTP email delivery (Brevo) across client sites.',

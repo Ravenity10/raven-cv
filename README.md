@@ -121,7 +121,7 @@ The prefix is stripped on the page, so the text is visible. Confirm or edit it, 
 ## Theme
 
 - Light and dark themes use Tailwind's class strategy (`.dark` on `<html>`).
-- The first visit follows the system setting. Choosing a theme with the toggle saves it in `localStorage`.
+- The first visit uses the dark theme. Choosing a theme with the toggle saves it in `localStorage`.
 - An inline script in `index.html` applies the theme before first paint, so there is no flash.
 - Colour tokens are CSS variables in `src/index.css`. Every text colour pair meets WCAG AA in both themes.
 

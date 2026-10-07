@@ -3,6 +3,7 @@ import { m } from 'motion/react';
 import { projectsCopy } from '../data/profile.js';
 import { lockScroll } from '../hooks/useSmoothScroll.js';
 import { ScreenshotPlaceholder } from './ProjectCard.jsx';
+import { toneAt } from './tones.js';
 
 const EASE = [0.22, 1, 0.36, 1];
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -107,8 +108,8 @@ export default function ProjectModal({ project, onClose }) {
             </h2>
             <p className="mt-4 leading-relaxed text-muted">{project.description}</p>
             <ul className="mt-5 flex flex-wrap gap-1.5" aria-label={projectsCopy.tagsLabel}>
-              {project.tags.map((tag) => (
-                <li key={tag} className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium">
+              {project.tags.map((tag, index) => (
+                <li key={tag} className={`chip ${toneAt(index)} !px-2.5 !py-1 !text-xs`}>
                   {tag}
                 </li>
               ))}
@@ -117,7 +118,7 @@ export default function ProjectModal({ project, onClose }) {
               href={project.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-fg transition-transform hover:-translate-y-0.5"
+              className="btn-brand mt-8 inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold"
             >
               {projectsCopy.visitSite}
               <span className="sr-only">{projectsCopy.newTab}</span>
@@ -138,7 +139,7 @@ export default function ProjectModal({ project, onClose }) {
                   transition={{ duration: 0.4, ease: EASE, delay: 0.2 + index * 0.06 }}
                   className="flex gap-3 text-sm leading-relaxed"
                 >
-                  <span className="font-mono text-xs leading-6 text-accent">{String(index + 1).padStart(2, '0')}</span>
+                  <span className="text-gradient font-mono text-xs leading-6">{String(index + 1).padStart(2, '0')}</span>
                   <span>{feature}</span>
                 </m.li>
               ))}

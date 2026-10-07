@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { AnimatePresence, m } from 'motion/react';
+import { AnimatePresence, m, useScroll, useSpring } from 'motion/react';
 import { navItems, profile, ui } from '../data/profile.js';
 import { scrollToTarget } from '../hooks/useSmoothScroll.js';
 import ThemeToggle from './ThemeToggle.jsx';
@@ -29,6 +29,8 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const active = useActiveSection(sectionIds);
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -59,9 +61,15 @@ export default function Header() {
     <header
       id="site-header"
       className={`sticky top-0 z-40 border-b backdrop-blur-md transition-colors ${
-        scrolled || open ? 'border-line bg-bg/85' : 'border-transparent bg-bg/0'
+        scrolled || open ? 'border-line bg-bg/75' : 'border-transparent bg-bg/0'
       }`}
     >
+      {/* Reading progress. */}
+      <m.div
+        aria-hidden="true"
+        style={{ scaleX: progress }}
+        className="absolute inset-x-0 bottom-[-1px] h-0.5 origin-left bg-linear-to-r from-(--grad-1) via-(--grad-2) to-(--grad-3)"
+      />
       <div className="container-page flex h-16 items-center justify-between gap-4">
         <a
           href="#top"
@@ -69,7 +77,7 @@ export default function Header() {
           title={ui.homeLabel}
           className="flex items-center gap-3 rounded-md"
         >
-          <span aria-hidden="true" className="grid size-9 place-items-center rounded-lg bg-fg font-display text-sm font-bold text-bg">
+          <span aria-hidden="true" className="bg-brand-strong grid size-9 place-items-center rounded-lg font-display text-sm font-bold text-white shadow-lg shadow-indigo-900/30">
             {profile.initials}
           </span>
           {/* Hidden visually at md, where the nav needs the room; always the accessible name. */}

@@ -29,27 +29,34 @@ export default function Contact() {
         <SectionHeading id="contact" index={6} label={contact.heading} title={contact.title} intro={contact.body} />
 
         <Reveal stagger={0.08} className="grid gap-4 md:grid-cols-[1.5fr_1fr]">
-          <m.div variants={revealItem} className="flex flex-col justify-between gap-8 rounded-3xl bg-fg p-8 text-bg md:p-10">
-            <div>
-              <p className="font-mono text-sm opacity-80">{contact.emailLabel}</p>
+          <m.div
+            variants={revealItem}
+            className="bg-brand-strong relative flex flex-col justify-between gap-8 overflow-hidden rounded-3xl p-8 text-white shadow-2xl shadow-indigo-900/30 md:p-10"
+          >
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-[radial-gradient(closest-side,rgb(255_255_255/0.25),transparent)]"
+            />
+            <div className="relative">
+              <p className="font-mono text-sm text-white/80">{contact.emailLabel}</p>
               <a
                 href={`mailto:${profile.email}`}
-                className="mt-2 block break-all font-display text-3xl font-bold tracking-tight underline-offset-8 hover:underline focus-visible:outline-bg md:text-4xl"
+                className="mt-2 block break-all font-display text-3xl font-bold tracking-tight underline-offset-8 hover:underline focus-visible:outline-white md:text-4xl"
               >
                 {profile.email}
               </a>
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="relative flex flex-wrap gap-3">
               <a
                 href={`mailto:${profile.email}`}
-                className="inline-flex items-center rounded-full bg-bg px-6 py-3 font-semibold text-fg transition-transform hover:-translate-y-0.5 focus-visible:outline-bg"
+                className="inline-flex items-center rounded-full bg-white px-6 py-3 font-semibold text-indigo-700 transition-transform hover:-translate-y-0.5 focus-visible:outline-white"
               >
                 {contact.ctaLabel}
               </a>
               <button
                 type="button"
                 onClick={copy}
-                className="inline-flex items-center rounded-full border border-bg/30 px-6 py-3 font-semibold transition-colors hover:border-bg focus-visible:outline-bg"
+                className="inline-flex items-center rounded-full border border-white/40 px-6 py-3 font-semibold transition-colors hover:border-white hover:bg-white/10 focus-visible:outline-white"
               >
                 {copied ? contact.copiedLabel : contact.copyLabel}
               </button>
@@ -59,7 +66,7 @@ export default function Contact() {
             </div>
           </m.div>
 
-          <m.div variants={revealItem} className="rounded-3xl border border-line bg-surface p-8 md:p-10">
+          <m.div variants={revealItem} className="spotlight rounded-3xl border border-line bg-surface p-8 md:p-10">
             <p className="font-mono text-sm text-muted">{contact.locationLabel}</p>
             <address className="mt-2 font-display text-2xl font-bold not-italic leading-snug tracking-tight">
               {profile.location}
