@@ -3,25 +3,24 @@ import { skillsCopy } from '../data/profile.js';
 import { skills, toolbox } from '../data/skills.js';
 import SectionHeading from './SectionHeading.jsx';
 import Reveal, { revealItem } from './Reveal.jsx';
+import Marquee from './Marquee.jsx';
 import { toneAt } from './tones.js';
 
-// One endless row of tool chips. The list is rendered twice so the loop is seamless;
-// the copy is hidden from assistive tech (and from everyone when motion is reduced).
+// One endless row of tool chips (see Marquee.jsx for how the loop stays seamless).
+// `pr-2` matches the gap so the spacing is even where one copy meets the next.
 function ToolRow({ items, offset, reverse }) {
   return (
-    <div className="marquee">
-      <div className={`marquee-track ${reverse ? 'marquee-reverse' : ''}`}>
-        {[0, 1].map((copy) => (
-          <ul key={copy} aria-hidden={copy === 1 ? 'true' : undefined} className="flex shrink-0 gap-2 pr-2">
-            {items.map((tool, index) => (
-              <li key={tool} className={`chip font-mono ${toneAt(index + offset)}`}>
-                {tool}
-              </li>
-            ))}
-          </ul>
-        ))}
-      </div>
-    </div>
+    <Marquee
+      items={items}
+      reverse={reverse}
+      secondsPerCopy={45}
+      listClassName="gap-2 pr-2"
+      renderItem={(tool, index) => (
+        <li key={tool} className={`chip font-mono ${toneAt(index + offset)}`}>
+          {tool}
+        </li>
+      )}
+    />
   );
 }
 

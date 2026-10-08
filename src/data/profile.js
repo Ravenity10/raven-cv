@@ -40,6 +40,24 @@ export const ui = {
   themeToLight: 'Switch to light theme',
   themeToDark: 'Switch to dark theme',
   primaryNav: 'Primary',
+  // Floating button (BackToTop.jsx): visible label and its accessible name.
+  backToTop: 'top',
+  backToTopLabel: 'Back to top',
+};
+
+// Boot screen shown while fonts, hero assets and the page load (Loader.jsx).
+// One step ticks off per quarter of real progress; the message names the step in progress.
+export const loader = {
+  user: 'raven@prod',
+  path: ':~$',
+  command: 'deploy --env production --portfolio',
+  steps: [
+    { label: 'Build', message: 'compiling the page bundle' },
+    { label: 'Test', message: 'loading fonts' },
+    { label: 'Deploy', message: 'decoding hero assets' },
+    { label: 'Release', message: 'verifying health checks' },
+  ],
+  done: 'deployment successful, site is live',
 };
 
 export const hero = {
@@ -52,10 +70,11 @@ export const hero = {
   secondaryCta: { label: 'View the work', href: '#projects' },
   statusLabel: 'Status',
   // `clock: true` renders the live Asia/Manila time in place of a fixed value.
+  // `minor: true` items are hidden on short screens so the hero fits one viewport.
   status: [
     { key: 'status', value: 'available', live: true },
-    { key: 'base', value: 'Botolan, Zambales' },
-    { key: 'since', value: `${CAREER_START} · ${YEARS_EXPERIENCE}+ yrs` },
+    { key: 'base', value: 'Botolan, Zambales', minor: true },
+    { key: 'since', value: `${CAREER_START} · ${YEARS_EXPERIENCE}+ yrs`, minor: true },
     { key: 'local', clock: true, suffix: 'UTC+08:00' },
   ],
   timeZone: 'Asia/Manila',

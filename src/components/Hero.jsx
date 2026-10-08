@@ -2,7 +2,10 @@ import { Fragment, useEffect, useRef, useState } from 'react';
 import { m, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { hero } from '../data/profile.js';
 import { scrollToTarget } from '../hooks/useSmoothScroll.js';
+import { useScramble } from '../hooks/useScramble.js';
 import StarField from './StarField.jsx';
+import Marquee from './Marquee.jsx';
+import { onBoot } from './Loader.jsx';
 
 // The entrance uses CSS keyframes (.anim-word / .anim-fade-up in index.css) so it plays
 // from the pre-rendered HTML on first paint, without waiting for JavaScript.
@@ -48,12 +51,13 @@ function useClock(timeZone) {
 function StatusValue({ item, clock }) {
   if (item.clock) {
     return (
-      <>
+      <span className="whitespace-nowrap">
         <time suppressHydrationWarning className="tabular-nums text-fg">
           {clock ?? '--:--:--'}
         </time>{' '}
-        <span className="text-muted">{item.suffix}</span>
-      </>
+        {/* The offset drops on the narrowest phones so the time never wraps or overflows. */}
+        <span className="hidden text-muted min-[360px]:inline">{item.suffix}</span>
+      </span>
     );
   }
   if (item.live) {
@@ -69,27 +73,20 @@ function StatusValue({ item, clock }) {
 
 function SkillTicker() {
   return (
-    <div className="hero-ticker marquee border-y border-line bg-surface/40 py-3">
-      <div className="marquee-track">
-        {[0, 1].map((copy) => (
-          <ul
-            key={copy}
-            aria-label={copy === 0 ? hero.tickerLabel : undefined}
-            aria-hidden={copy === 1 ? 'true' : undefined}
-            className="flex shrink-0 items-center font-mono text-[0.8rem] text-muted"
-          >
-            {hero.ticker.map((skill) => (
-              <li key={skill} className="flex items-center whitespace-nowrap">
-                <span className="px-5">{skill}</span>
-                <span aria-hidden="true" className="text-accent">
-                  /
-                </span>
-              </li>
-            ))}
-          </ul>
-        ))}
-      </div>
-    </div>
+    <Marquee
+      items={hero.ticker}
+      label={hero.tickerLabel}
+      className="border-y border-line bg-surface/40 py-3"
+      listClassName="items-center font-mono text-[0.8rem] text-muted"
+      renderItem={(skill) => (
+        <li key={skill} className="flex items-center whitespace-nowrap">
+          <span className="px-5">{skill}</span>
+          <span aria-hidden="true" className="text-accent">
+            /
+          </span>
+        </li>
+      )}
+    />
   );
 }
 
@@ -97,6 +94,11 @@ export default function Hero() {
   const ref = useRef(null);
   const reduce = useReducedMotion();
   const clock = useClock(hero.timeZone);
+  const scramble = useScramble();
+  const { play } = scramble;
+
+  // The name scrambles once the boot loader has gone, and again on hover.
+  useEffect(() => onBoot(play), [play]);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
 
   const cardY = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : -60]);
@@ -114,12 +116,14 @@ export default function Hero() {
   };
 
   return (
-    <section ref={ref} aria-labelledby="hero-title" className="relative overflow-hidden">
+    // Fills the viewport below the sticky header (.hero in index.css); the copy is centred
+    // in the space left above the ticker, which is pinned to the bottom.
+    <section id="hero" ref={ref} aria-labelledby="hero-title" className="hero relative flex flex-col overflow-hidden outline-none">
       <StarField />
 
-      <div className="container-page relative grid gap-12 pb-14 pt-12 md:pb-20 md:pt-20 lg:grid-cols-[1.45fr_1fr] lg:items-center">
+      <div className="hero-body container-page relative grid flex-1 content-center gap-12 lg:grid-cols-[1.45fr_1fr] lg:items-center">
         <m.div style={{ opacity: copyOpacity }} className="min-w-0">
-          <p className="anim-fade-up eyebrow mb-6 flex flex-wrap items-center gap-x-2.5 gap-y-1 uppercase tracking-[0.06em] sm:gap-x-3 sm:tracking-[0.16em]" style={delay(0)}>
+          <p className="anim-fade-up eyebrow hero-gap-sm flex flex-wrap items-center gap-x-2.5 gap-y-1 uppercase tracking-[0.06em] sm:gap-x-3 sm:tracking-[0.16em]" style={delay(0)}>
             <span aria-hidden="true" className="hidden h-px w-8 bg-current sm:block" />
             <span>{hero.eyebrow}</span>
             <span aria-hidden="true" className="text-accent">
@@ -128,35 +132,41 @@ export default function Hero() {
             <span className="text-accent">{hero.eyebrowPlace}</span>
           </p>
 
+          {/* The real name is the accessible label; the per-letter spans that scramble are hidden. */}
           <h1
             id="hero-title"
-            className="font-display text-[clamp(2.25rem,10.4vw,4rem)] font-bold uppercase leading-[0.95] tracking-[-0.02em] lg:text-[4.25rem] xl:text-[4.9rem]"
+            ref={scramble.ref}
+            aria-label={hero.nameLines.join(' ')}
+            onPointerEnter={play}
+            className="hero-name font-display font-bold uppercase leading-[0.95] tracking-[-0.02em]"
           >
             {lines.map((line, lineIndex) => (
-              <span key={lineIndex} className="block">
+              <span key={lineIndex} aria-hidden="true" className="block">
                 {line.map((word, index) => (
                   // The space sits between the inline-blocks; inside one it would be collapsed.
                   <Fragment key={index}>
                     <span className="inline-block overflow-hidden pb-[0.06em] align-bottom">
                       <span className={`anim-word ${lineIndex === lastLine ? 'text-gradient' : ''}`} style={delay(START + step++ * WORD_STAGGER)}>
-                        {word}
+                        {[...word].map((char, charIndex) => (
+                          <span key={charIndex} data-char={char} className="glitch-char">
+                            {char}
+                          </span>
+                        ))}
                       </span>
                     </span>
                     {index < line.length - 1 ? ' ' : ''}
                   </Fragment>
                 ))}
-                {lineIndex === lastLine && (
-                  <span aria-hidden="true" className="caret ml-[0.12em] inline-block h-[0.72em] w-[0.38em] bg-accent align-baseline" />
-                )}
+                {lineIndex === lastLine && <span className="caret ml-[0.12em] inline-block h-[0.72em] w-[0.38em] bg-accent align-baseline" />}
               </span>
             ))}
           </h1>
 
-          <p className="anim-fade-up mt-6 max-w-xl text-lg leading-relaxed text-muted text-pretty md:text-xl" style={delay(afterHeading)}>
+          <p className="anim-fade-up hero-tagline hero-gap max-w-xl leading-relaxed text-muted text-pretty" style={delay(afterHeading)}>
             {hero.tagline}
           </p>
 
-          <div className="anim-fade-up mt-8 flex flex-wrap gap-3" style={delay(afterHeading + 0.08)}>
+          <div className="anim-fade-up hero-gap flex flex-wrap gap-3" style={delay(afterHeading + 0.08)}>
             <a href={hero.primaryCta.href} className="btn-brand inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold">
               {hero.primaryCta.label}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -174,11 +184,15 @@ export default function Hero() {
 
           <dl
             aria-label={hero.statusLabel}
-            className="anim-fade-up mt-10 grid grid-cols-1 gap-x-8 gap-y-2.5 border-t border-line pt-6 font-mono text-[0.8rem] min-[400px]:grid-cols-2 sm:max-w-xl"
+            className="anim-fade-up hero-status grid grid-cols-2 gap-x-6 gap-y-3.5 border-t border-line font-mono text-[0.8rem] sm:max-w-xl sm:gap-x-8 sm:gap-y-2.5"
             style={delay(afterHeading + 0.16)}
           >
+            {/* Phones: label above value, so two columns fit without values wrapping. */}
             {hero.status.map((item) => (
-              <div key={item.key} className="flex min-w-0 items-baseline gap-2">
+              <div
+                key={item.key}
+                className={`flex min-w-0 flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-2 ${item.minor ? '[@media(max-height:760px)]:hidden' : ''}`}
+              >
                 <dt className="shrink-0 text-muted">{item.key}:</dt>
                 <dd className="min-w-0">
                   <StatusValue item={item} clock={clock} />
@@ -214,6 +228,8 @@ export default function Hero() {
       <div className="anim-fade-up relative" style={delay(afterHeading + 0.24)}>
         <SkillTicker />
       </div>
+      {/* Once this scrolls above the viewport, the floating back-to-top button shows (BackToTop.jsx). */}
+      <span data-hero-sentinel aria-hidden="true" className="pointer-events-none absolute bottom-0 left-0 h-px w-px" />
     </section>
   );
 }

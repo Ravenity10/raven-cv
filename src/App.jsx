@@ -13,6 +13,8 @@ import Contact from './components/Contact.jsx';
 import Footer from './components/Footer.jsx';
 import Cursor from './components/Cursor.jsx';
 import Toast from './components/Toast.jsx';
+import Loader from './components/Loader.jsx';
+import BackToTop from './components/BackToTop.jsx';
 
 export default function App() {
   useSmoothScroll();
@@ -47,7 +49,9 @@ export default function App() {
         <Contact />
       </main>
       <Footer />
+      <BackToTop />
       <Toast />
+      <Loader />
       <Cursor />
     </MotionConfig>
     </LazyMotion>

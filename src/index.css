@@ -37,6 +37,18 @@
   --pink-bg: #fde7f1;
   --amber: #b45309;
   --amber-bg: #fdf0dc;
+
+  /* Hero canvas (StarField.jsx): "R G B" triplets plus opacities, read from JS. */
+  --sky-dot: 79 70 229;
+  --sky-dot-alpha: 0.42;
+  --sky-line: 79 70 229;
+  --sky-line-alpha: 0.18;
+  --sky-trail: 99 102 241;
+  --sky-head: 99 102 241;
+  --sky-shoot-alpha: 0.35;
+
+  /* Sticky header: 0.75rem top padding + 2.75rem pills. The hero fills the rest of the viewport. */
+  --header-h: 3.5rem;
 }
 
 .dark {
@@ -67,6 +79,14 @@
   --pink-bg: rgb(236 72 153 / 0.12);
   --amber: #fbbf24;
   --amber-bg: rgb(245 158 11 / 0.12);
+
+  --sky-dot: 226 232 255;
+  --sky-dot-alpha: 0.75;
+  --sky-line: 165 170 250;
+  --sky-line-alpha: 0.3;
+  --sky-trail: 199 210 254;
+  --sky-head: 255 255 255;
+  --sky-shoot-alpha: 0.95;
 }
 
 @theme inline {
@@ -93,6 +113,8 @@
   html {
     scroll-padding-top: 5rem; /* sticky header height */
     -webkit-text-size-adjust: 100%;
+    /* Locking scroll (boot loader, project modal) must not shift the page sideways. */
+    scrollbar-gutter: stable;
   }
 
   body {
@@ -123,6 +145,10 @@
     *::before,
     *::after {
       transition-duration: 0.01ms !important;
+    }
+    /* The boot loader still fades out, briefly (Loader.jsx REDUCED_FADE). */
+    .boot.boot {
+      transition-duration: 0.16s !important;
     }
   }
 }
@@ -356,7 +382,10 @@
     animation-delay: -16s;
   }
 
-  /* Endless toolbox rows. The second copy of each list is aria-hidden. */
+  /*
+    Endless rows (Marquee.jsx). The track holds two identical halves, each at least as wide
+    as the row, so sliding it 0 to -50% loops with no gap. Every repeat is aria-hidden.
+  */
   .marquee {
     overflow: hidden;
     -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
@@ -365,7 +394,8 @@
   .marquee-track {
     display: flex;
     width: max-content;
-    animation: marquee 45s linear infinite;
+    animation: marquee var(--marquee-duration, 45s) linear infinite;
+    will-change: transform;
   }
   .marquee-reverse {
     animation-direction: reverse;
@@ -373,8 +403,262 @@
   .marquee:hover .marquee-track {
     animation-play-state: paused;
   }
-  .hero-ticker .marquee-track {
-    animation-duration: 40s;
+
+  /*
+    Hero: one viewport tall below the sticky header (svh, so mobile browser bars never push
+    the ticker off screen). Type and spacing scale with both width and height, and the least
+    important status items drop out on short screens.
+  */
+  .hero {
+    min-height: calc(100vh - var(--header-h));
+    min-height: calc(100svh - var(--header-h));
+  }
+  .hero-body {
+    padding-block: clamp(1.25rem, 5svh, 4.5rem);
+  }
+  .hero-name {
+    /* 12vw fills a phone's width with the longest line ("JOHN RAVEN M.") without overflowing. */
+    font-size: clamp(2.1rem, min(12vw, 9.5svh), 4rem);
+  }
+  @media (min-width: 1024px) {
+    .hero-name {
+      font-size: clamp(2.5rem, 9.5svh, 4.25rem);
+    }
+  }
+  @media (min-width: 1280px) {
+    .hero-name {
+      font-size: clamp(2.5rem, 9.5svh, 4.9rem);
+    }
+  }
+  .hero-tagline {
+    font-size: clamp(1rem, 0.85rem + 0.6vw, 1.25rem);
+  }
+  .hero-gap-sm {
+    margin-bottom: clamp(0.75rem, 2.6svh, 1.5rem);
+  }
+  .hero-gap {
+    margin-top: clamp(1rem, 3.2svh, 2rem);
+  }
+  /* Items marked `minor` in profile.js hide below 760px of height (a utility in Hero.jsx). */
+  .hero-status {
+    margin-top: clamp(1.25rem, 4svh, 2.5rem);
+    padding-top: clamp(0.875rem, 2.6svh, 1.5rem);
+  }
+
+  /*
+    Hero name scramble (useScramble.js). During the run each letter is pinned to the width it
+    had at rest, so the random glyphs (same font, so same line height) never move the layout.
+    Resolved letters stay left-aligned in their box, exactly where they sit at rest.
+  */
+  .glitch-pinned {
+    display: inline-block;
+    white-space: pre;
+  }
+  .glitch-pinned.is-scrambling {
+    text-align: center;
+    color: var(--accent);
+  }
+
+  /*
+    Boot loader (Loader.jsx). Pre-rendered, so it covers the page from first paint. If
+    JavaScript never takes over, the failsafe animation gets it out of the way after 5s.
+  */
+  .boot {
+    position: fixed;
+    inset: 0;
+    z-index: 85;
+    display: grid;
+    place-items: center;
+    padding: 1.25rem;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-mono);
+    transition: opacity 0.45s ease;
+    animation: boot-failsafe 0.4s ease 5s forwards;
+  }
+  .boot::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(40rem, 110vw);
+    aspect-ratio: 1;
+    border-radius: 9999px;
+    transform: translate(-50%, -58%);
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent), transparent 62%);
+    pointer-events: none;
+  }
+  .boot.is-leaving {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .boot-panel {
+    position: relative;
+    width: min(34rem, 100%);
+  }
+  .boot-prompt {
+    font-size: clamp(0.75rem, 2.9vw, 0.875rem);
+    line-height: 1.6;
+  }
+  .boot-caret {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.1em;
+    margin-left: 0.4em;
+    vertical-align: -0.2em;
+    background: var(--accent);
+    animation: blink 1.1s steps(1) infinite;
+  }
+  .boot-steps {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: 2.25rem;
+  }
+  .boot-rail {
+    position: absolute;
+    top: 13px;
+    left: 12.5%;
+    right: 12.5%;
+    height: 2px;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--border);
+  }
+  .boot-rail-fill {
+    display: block;
+    height: 100%;
+    background: var(--accent);
+    transform-origin: left;
+    transition: transform 0.2s linear;
+  }
+  .boot-step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .boot-node {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 9999px;
+    border: 1.5px solid var(--border);
+    background: var(--bg);
+    color: var(--accent-fg);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .boot-step[data-state='active'] .boot-node::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: inherit;
+    border: 2px solid color-mix(in srgb, var(--accent) 25%, transparent);
+    border-top-color: var(--accent);
+    animation: spin 0.8s linear infinite;
+  }
+  .boot-step[data-state='done'] .boot-node {
+    border-color: var(--accent);
+    background: var(--accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent);
+    animation: pop 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .boot-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .boot-step[data-state='done'] .boot-label {
+    color: var(--accent);
+  }
+  .boot-foot {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2.25rem;
+    font-size: 0.8rem;
+  }
+  .boot-pct {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /*
+    Floating back-to-top button (BackToTop.jsx). Motion owns its transform (enter, exit and
+    the lift above the footer); hover only fades a glow layer and nudges the arrow.
+  */
+  .back-to-top {
+    position: fixed;
+    right: calc(20px + env(safe-area-inset-right));
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    z-index: 45;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0.375rem 0.875rem 0.375rem 0.375rem;
+    border: 1px solid var(--accent);
+    border-radius: 0.875rem;
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    box-shadow: 0 12px 30px -16px rgb(0 0 0 / 0.5);
+  }
+  .back-to-top::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent),
+      0 0 26px -4px color-mix(in srgb, var(--accent) 60%, transparent);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .back-to-top:hover::after,
+  .back-to-top:focus-visible::after {
+    opacity: 1;
+  }
+  .back-to-top-arrow {
+    position: relative;
+    color: var(--accent);
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .back-to-top:hover .back-to-top-arrow {
+    transform: translateY(-2px);
+  }
+  .back-to-top-track,
+  .back-to-top-ring {
+    fill: none;
+    stroke-width: 2;
+  }
+  .back-to-top-track {
+    stroke: var(--border);
+  }
+  .back-to-top-ring {
+    stroke: var(--accent);
+    stroke-linecap: round;
+  }
+  @media (min-width: 768px) {
+    .back-to-top {
+      right: calc(32px + env(safe-area-inset-right));
+      bottom: calc(32px + env(safe-area-inset-bottom));
+      background: color-mix(in srgb, var(--surface) 82%, transparent);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+    }
   }
 
   /* Hero star canvas fades in once it has drawn; it never takes pointer events. */
@@ -503,9 +787,66 @@
   }
 }
 @keyframes marquee {
-  to {
-    transform: translateX(-50%);
+  from {
+    transform: translate3d(0, 0, 0);
   }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+@keyframes boot-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+@keyframes pop {
+  50% {
+    transform: scale(1.18);
+  }
+}
+
+/*
+  Theme switch. Browsers with the View Transitions API get a circular reveal from the toggle
+  (ThemeToggle.jsx animates the clip-path of the new snapshot). Others get a 300ms colour
+  fade, applied only while html.theme-fade is set (useTheme.js) and only to theme-aware
+  elements; first paint and hydration never carry the class, so nothing flashes on load.
+*/
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+html.theme-fade
+  :is(
+    body,
+    header,
+    footer,
+    .glass,
+    .chip,
+    .boot,
+    .back-to-top,
+    .page-bg-grid,
+    [class*='bg-surface'],
+    [class*='bg-fg'],
+    [class*='bg-accent'],
+    [class*='border-line'],
+    [class*='text-muted'],
+    [class*='text-fg'],
+    [class*='text-accent'],
+    [class*='text-('],
+    svg,
+    svg path,
+    svg circle
+  ) {
+  transition-property: background-color, color, border-color, fill, stroke !important;
+  transition-duration: 300ms !important;
+  transition-timing-function: ease !important;
 }
 
 /* Hero entrance. CSS rather than Motion so it runs from the pre-rendered HTML. */
@@ -573,11 +914,11 @@
   .orb,
   .code-float,
   .caret,
-  .pulse-dot::after {
+  .pulse-dot::after,
+  .boot-caret,
+  .boot-step .boot-node,
+  .boot-step .boot-node::after {
     animation: none;
-  }
-  .star-field {
-    display: none;
   }
   .marquee {
     -webkit-mask-image: none;

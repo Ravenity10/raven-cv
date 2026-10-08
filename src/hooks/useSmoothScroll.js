@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import Lenis from 'lenis';
 
 let lenis = null;
+let locked = false;
 
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -12,6 +13,8 @@ export function useSmoothScroll() {
     if (prefersReducedMotion()) return undefined;
 
     lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+    // The boot loader can lock scrolling before Lenis exists (child effects run first).
+    if (locked) lenis.stop();
     let frame = requestAnimationFrame(function raf(time) {
       lenis?.raf(time);
       frame = requestAnimationFrame(raf);
@@ -25,14 +28,15 @@ export function useSmoothScroll() {
   }, []);
 }
 
-export function scrollToTarget(target) {
+// `duration` (seconds) overrides Lenis's distance-based timing for this one scroll.
+export function scrollToTarget(target, { duration } = {}) {
   const element = target === 'top' ? document.body : document.getElementById(target);
   if (!element) return;
 
   // The sticky header offset comes from `scroll-padding-top` on <html> (index.css),
   // which both Lenis and native scrolling respect.
   if (lenis) {
-    lenis.scrollTo(target === 'top' ? 0 : element);
+    lenis.scrollTo(target === 'top' ? 0 : element, duration ? { duration } : undefined);
   } else if (target === 'top') {
     window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
   } else {
@@ -47,7 +51,8 @@ export function scrollToTarget(target) {
   history.replaceState(null, '', target === 'top' ? window.location.pathname : `#${target}`);
 }
 
-export function lockScroll(locked) {
+export function lockScroll(value) {
+  locked = value;
   if (lenis) {
     if (locked) lenis.stop();
     else lenis.start();
