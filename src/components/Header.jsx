@@ -98,13 +98,14 @@ export default function Header() {
         style={{ scaleX: progress }}
         className="absolute inset-x-0 top-0 h-0.5 origin-left bg-linear-to-r from-(--grad-1) via-(--grad-2) to-(--grad-3)"
       />
-      <div className="mx-auto flex max-w-[84rem] items-center justify-between gap-3 px-4 md:grid md:grid-cols-[1fr_auto_1fr] md:px-6">
+      <div className="mx-auto flex max-w-[84rem] items-center justify-between gap-2 px-4 min-[360px]:gap-3 md:grid md:grid-cols-[1fr_auto_1fr] md:px-6">
         {/* Brand */}
         <a
           href="#top"
           onClick={(event) => go(event, 'top')}
           title={ui.homeLabel}
-          className={`${pill} ${lifted} flex items-center gap-3 justify-self-start p-1 pr-5 md:pr-1 lg:pr-5`}
+          // Tighter below 360px (with the row and action gaps) so the header fits a 320px screen.
+          className={`${pill} ${lifted} flex items-center gap-2 justify-self-start p-1 pr-3 min-[360px]:gap-3 min-[360px]:pr-5 md:pr-1 lg:pr-5`}
         >
           <span aria-hidden="true" className="relative grid size-9 shrink-0 place-items-center rounded-full bg-brand-strong font-display text-xs font-bold text-white shadow-md shadow-indigo-900/30">
             {profile.initials}
@@ -155,7 +156,7 @@ export default function Header() {
         </nav>
 
         {/* Actions */}
-        <div className="flex items-center gap-2 justify-self-end">
+        <div className="flex items-center gap-1.5 justify-self-end min-[360px]:gap-2">
           {/* Click to copy; the toast confirms (Toast.jsx). */}
           <button
             type="button"
