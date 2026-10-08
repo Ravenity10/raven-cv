@@ -4,10 +4,12 @@ import { m } from 'motion/react';
 export default function SectionHeading({ id, index, label, title, intro }) {
   return (
     <Reveal stagger={0.08} className="mb-10 max-w-3xl md:mb-14">
-      <m.p variants={revealItem} className="eyebrow mb-3 flex items-center gap-3">
-        <span className="text-gradient font-medium">{String(index).padStart(2, '0')}</span>
-        <span aria-hidden="true" className="h-px w-10 bg-linear-to-r from-(--grad-1) to-(--grad-2)" />
-        <span>{label}</span>
+      {/* Terminal-style label: "01 - whoami". */}
+      <m.p variants={revealItem} className="eyebrow mb-3 flex items-center gap-2">
+        <span className="font-medium text-accent">{String(index).padStart(2, '0')}</span>
+        <span aria-hidden="true">-</span>
+        <span className="text-fg">{label}</span>
+        <span aria-hidden="true" className="caret inline-block h-[1.05em] w-[0.5em] translate-y-px bg-accent/70" />
       </m.p>
       <m.h2
         variants={revealItem}

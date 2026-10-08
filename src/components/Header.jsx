@@ -1,7 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, m, useScroll, useSpring } from 'motion/react';
-import { navItems, profile, ui } from '../data/profile.js';
+import { contact, navItems, profile, ui } from '../data/profile.js';
 import { scrollToTarget } from '../hooks/useSmoothScroll.js';
+import { copyEmail } from '../hooks/copyEmail.js';
 import ThemeToggle from './ThemeToggle.jsx';
 import CvLink from './CvLink.jsx';
 
@@ -67,8 +68,16 @@ export default function Header() {
   useEffect(() => {
     if (!open) return undefined;
     const onKey = (event) => event.key === 'Escape' && setOpen(false);
+    // Tapping anywhere outside the header closes the dropdown (there is no backdrop to tap).
+    const onPointerDown = (event) => {
+      if (!document.getElementById('site-header')?.contains(event.target)) setOpen(false);
+    };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onPointerDown);
+    };
   }, [open]);
 
   const go = (event, id) => {
@@ -147,16 +156,20 @@ export default function Header() {
 
         {/* Actions */}
         <div className="flex items-center gap-2 justify-self-end">
-          <a
-            href={`mailto:${profile.email}`}
+          {/* Click to copy; the toast confirms (Toast.jsx). */}
+          <button
+            type="button"
+            onClick={copyEmail}
+            title={contact.copyLabel}
             className={`${pill} ${lifted} hidden items-center gap-2.5 px-5 font-mono text-[0.8rem] font-medium hover:border-accent hover:text-accent xl:inline-flex`}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-accent">
-              <rect x="3" y="5" width="18" height="14" rx="2" />
-              <path d="m3 7 9 6 9-6" />
+              <rect x="9" y="9" width="12" height="12" rx="2" />
+              <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" />
             </svg>
             {profile.email}
-          </a>
+            <span className="sr-only">, {contact.copyLabel.toLowerCase()}</span>
+          </button>
           <CvLink
             label={profile.cv.shortLabel}
             className={`${pill} ${lifted} hidden items-center gap-1.5 px-4 text-sm font-semibold hover:border-accent hover:text-accent lg:inline-flex`}
@@ -182,11 +195,12 @@ export default function Header() {
           <m.nav
             id="mobile-nav"
             aria-label={ui.primaryNav}
-            initial={{ opacity: 0, y: -8, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.98 }}
-            transition={{ duration: 0.2 }}
-            className="glass absolute inset-x-4 top-full mt-2 origin-top rounded-3xl border border-line p-2 shadow-2xl shadow-black/20 md:hidden"
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.16 }}
+            // A plain dropdown with a solid background: no backdrop, no blur, nothing covering the page.
+            className="absolute inset-x-4 top-full mt-2 rounded-3xl border border-line bg-surface p-2 shadow-xl shadow-black/25 md:hidden"
           >
             <ul className="flex flex-col">
               {navItems

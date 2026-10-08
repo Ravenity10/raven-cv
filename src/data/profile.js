@@ -1,5 +1,6 @@
 // Single source of truth for years of experience (first role: Oct 2020). Update once a year.
 export const YEARS_EXPERIENCE = 6;
+export const CAREER_START = 2020;
 
 export const profile = {
   name: 'John Raven M. Delos Reyes',
@@ -42,22 +43,24 @@ export const ui = {
 };
 
 export const hero = {
-  eyebrow: `${profile.role} · ${profile.locationShort}`,
-  // Each string is one line of the heading; words reveal in sequence. The last line is highlighted.
-  headingLines: ['Custom WordPress,', 'engineered to', 'perform & last.'],
-  // Rendered as "I'm <name>" (highlighted) followed by introBody.
-  introLead: "I'm",
-  introBody: `, a WordPress developer with ${YEARS_EXPERIENCE}+ years turning designs into fast, secure websites that teams can update with confidence. I craft bespoke themes, ACF-powered content models and purpose-built plugins, then connect them to the payments, CRMs and email platforms a business runs on.`,
-  techLabel: 'Core stack',
-  tech: ['PHP', 'WordPress', 'WooCommerce', 'ACF Pro', 'JavaScript'],
-  primaryCta: { label: 'View my work', href: '#projects' },
-  secondaryCta: { label: "Let's talk", href: `mailto:${profile.email}` },
-  cvCta: profile.cv.label,
-  stats: [
-    { value: `${YEARS_EXPERIENCE}+`, label: 'years crafting WordPress' },
-    { value: 'PROJECT_COUNT', label: 'live client builds showcased' },
-    { value: 'PHP / JS', label: 'from theme to plugin to API' },
+  eyebrow: 'WordPress Developer',
+  eyebrowPlace: 'Zambales, PH',
+  // Each string is one line of the (uppercase) name; the last line gets the gradient.
+  nameLines: ['John Raven M.', 'Delos Reyes'],
+  tagline: 'I build custom WordPress themes, ACF content models, custom post types and plugins that teams run with confidence.',
+  primaryCta: { label: "Let's talk", href: `mailto:${profile.email}` },
+  secondaryCta: { label: 'View the work', href: '#projects' },
+  statusLabel: 'Status',
+  // `clock: true` renders the live Asia/Manila time in place of a fixed value.
+  status: [
+    { key: 'status', value: 'available', live: true },
+    { key: 'base', value: 'Botolan, Zambales' },
+    { key: 'since', value: `${CAREER_START} · ${YEARS_EXPERIENCE}+ yrs` },
+    { key: 'local', clock: true, suffix: 'UTC+08:00' },
   ],
+  timeZone: 'Asia/Manila',
+  tickerLabel: 'Skills',
+  ticker: ['Custom themes', 'ACF Pro', 'Custom post types', 'Plugin development', 'WooCommerce', 'WP REST API', 'PHP', 'JavaScript', 'Stripe & Square', 'Gravity Forms', 'MySQL', 'WP-CLI'],
   snippetLabel: 'functions.php',
   snippet: `add_action( 'init', function () {
   register_post_type( 'project', [
@@ -71,8 +74,9 @@ export const hero = {
   snippetCaption: 'Solid architecture first. Polished design on top.',
 };
 
+// Section labels read like terminal commands: "01 - whoami".
 export const about = {
-  heading: 'About',
+  heading: 'whoami',
   title: 'A developer who builds for the people editing the site next week.',
   paragraphs: [
     `I'm a WordPress developer based in ${profile.locationShort}, currently a Senior WordPress Developer at TechZ Digital, where I lead a web development and digital marketing team. Over the past ${YEARS_EXPERIENCE} years most of my work has been custom: themes built from a design, content modelled with ACF and custom post types, and plugins written for the one job a site needs done.`,
@@ -87,7 +91,7 @@ export const about = {
 };
 
 export const services = {
-  heading: 'Services',
+  heading: 'services',
   title: 'What I can take off your plate.',
   items: [
     {
@@ -118,7 +122,7 @@ export const services = {
 };
 
 export const contact = {
-  heading: 'Contact',
+  heading: 'contact',
   title: 'Have a WordPress project in mind?',
   body: 'Tell me about the site, the deadline and what is not working today. I usually reply within one working day.',
   emailLabel: 'Email',
@@ -128,6 +132,8 @@ export const contact = {
   newTab: '(opens in a new tab)',
   copyLabel: 'Copy email address',
   copiedLabel: 'Copied',
+  copiedToast: 'Email copied to clipboard',
+  copyFailedToast: `Copy blocked. Email: ${profile.email}`,
   ctaLabel: 'Start a conversation',
 };
 
@@ -137,7 +143,7 @@ export const footer = {
 };
 
 export const projectsCopy = {
-  heading: 'Projects',
+  heading: 'projects',
   title: 'Selected WordPress builds.',
   intro: 'Live client sites I have built or worked on. Select a project for the full breakdown.',
   viewDetails: 'View details',
@@ -151,7 +157,7 @@ export const projectsCopy = {
 };
 
 export const skillsCopy = {
-  heading: 'Skills',
+  heading: 'stack',
   title: 'The WordPress stack, end to end.',
   toolboxHeading: 'Toolbox',
 };

@@ -3,7 +3,7 @@ import { YEARS_EXPERIENCE } from './profile.js';
 // From John_Raven_Delos_Reyes_Resume.pdf (public/cv/). Keep in sync when the CV changes.
 // Roles are listed newest first; a company with several roles groups them together.
 export const experienceCopy = {
-  heading: 'Experience',
+  heading: 'experience',
   title: `${YEARS_EXPERIENCE} years of WordPress, from junior developer to team lead.`,
   intro: 'Building custom themes and plugins for e-commerce, lead generation and content sites, and now leading a development and digital marketing team.',
   educationHeading: 'Education',

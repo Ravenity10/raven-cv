@@ -83,9 +83,10 @@
 }
 
 @theme {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-display: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* Self-hosted via @fontsource-variable (imported in main.jsx). */
+  --font-sans: 'Space Grotesk Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-display: 'Space Grotesk Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 @layer base {
@@ -185,6 +186,14 @@
     background: color-mix(in srgb, var(--surface) 72%, transparent);
     -webkit-backdrop-filter: blur(14px);
     backdrop-filter: blur(14px);
+  }
+  /* Phones: solid surfaces, no blur layers. */
+  @media (max-width: 767px) {
+    .glass {
+      background: var(--surface);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
   }
 
   /* Primary button: the brand gradient, dark enough for white text in both themes (5.7:1+). */
@@ -312,6 +321,7 @@
     mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, black 35%, transparent 100%);
   }
   .orb {
+    display: none; /* shown from md up; too heavy for phones */
     position: absolute;
     width: 44rem;
     height: 44rem;
@@ -320,6 +330,11 @@
     background: radial-gradient(circle, var(--orb-color) 0%, transparent 65%);
     animation: drift 24s ease-in-out infinite alternate;
     will-change: transform;
+  }
+  @media (min-width: 768px) {
+    .orb {
+      display: block;
+    }
   }
   .orb-1 {
     --orb-color: var(--grad-1);
@@ -357,6 +372,110 @@
   }
   .marquee:hover .marquee-track {
     animation-play-state: paused;
+  }
+  .hero-ticker .marquee-track {
+    animation-duration: 40s;
+  }
+
+  /* Hero star canvas fades in once it has drawn; it never takes pointer events. */
+  .star-field {
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  .star-field.is-ready {
+    opacity: 1;
+  }
+
+  /* Status toast (Toast.jsx). */
+  .toast {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+  .toast.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /*
+    Custom cursor (Cursor.jsx). Mounted only for a fine, hovering pointer without reduced motion.
+    The dot and ring are positioned with translate3d from JS; states only change scale/opacity.
+  */
+  html.has-cursor,
+  html.has-cursor * {
+    cursor: none !important;
+  }
+  .cursor {
+    position: fixed;
+    inset: 0 auto auto 0;
+    z-index: 90;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  .cursor[data-visible='false'] {
+    opacity: 0;
+  }
+  .cursor-dot,
+  .cursor-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    will-change: transform;
+  }
+  .cursor-dot {
+    width: 6px;
+    height: 6px;
+    margin: -3px 0 0 -3px;
+    border-radius: 9999px;
+    background: var(--accent);
+  }
+  .cursor-ring-shape {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in srgb, var(--fg) 45%, transparent);
+    background: transparent;
+    transition:
+      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 0.25s ease,
+      border-color 0.25s ease;
+  }
+  .cursor-label {
+    position: absolute;
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--accent-fg);
+    transition:
+      opacity 0.2s ease,
+      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .cursor[data-state='hover'] .cursor-ring-shape {
+    transform: scale(1.6);
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+  }
+  .cursor[data-state='view'] .cursor-ring-shape {
+    transform: scale(2.2);
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+  .cursor[data-state='view'] .cursor-label {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  .cursor[data-state='view'] .cursor-dot {
+    opacity: 0;
+  }
+  .cursor[data-pressed] .cursor-ring-shape {
+    transform: scale(0.8);
   }
 }
 
@@ -456,6 +575,9 @@
   .caret,
   .pulse-dot::after {
     animation: none;
+  }
+  .star-field {
+    display: none;
   }
   .marquee {
     -webkit-mask-image: none;

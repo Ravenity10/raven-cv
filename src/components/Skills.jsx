@@ -38,6 +38,7 @@ export default function Skills() {
             <m.li
               key={skill.id}
               variants={revealItem}
+              data-cursor
               className={`spotlight hover-glow ${toneAt(index)} rounded-2xl border border-line bg-surface p-6 transition-[border-color,box-shadow] duration-300 hover:border-(--tone) md:p-8`}
             >
               <span className="eyebrow text-(--tone)">{String(index + 1).padStart(2, '0')}</span>

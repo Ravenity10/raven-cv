@@ -18,7 +18,7 @@ export default function About() {
           </Reveal>
           <Reveal as="dl" stagger={0.08} className="grid grid-cols-2 gap-px self-start overflow-hidden rounded-2xl border border-line bg-line">
             {about.facts.map((fact) => (
-              <m.div key={fact.label} variants={revealItem} className="spotlight bg-surface p-5">
+              <m.div key={fact.label} variants={revealItem} data-cursor className="spotlight bg-surface p-5">
                 <dt className="eyebrow">{fact.label}</dt>
                 <dd className="mt-1 font-display text-lg font-semibold">{fact.value}</dd>
               </m.div>

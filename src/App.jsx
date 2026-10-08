@@ -11,6 +11,8 @@ import Experience from './components/Experience.jsx';
 import Services from './components/Services.jsx';
 import Contact from './components/Contact.jsx';
 import Footer from './components/Footer.jsx';
+import Cursor from './components/Cursor.jsx';
+import Toast from './components/Toast.jsx';
 
 export default function App() {
   useSmoothScroll();
@@ -45,6 +47,8 @@ export default function App() {
         <Contact />
       </main>
       <Footer />
+      <Toast />
+      <Cursor />
     </MotionConfig>
     </LazyMotion>
   );

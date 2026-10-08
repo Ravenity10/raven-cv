@@ -8,9 +8,12 @@
     "build": "vite build && vite build --ssr src/entry-server.jsx --outDir dist-ssr && node scripts/prerender.mjs",
     "preview": "vite preview",
     "screenshots": "node scripts/screenshot.mjs",
-    "brand-assets": "node scripts/brand-assets.mjs"
+    "brand-assets": "node scripts/brand-assets.mjs",
+    "hero-shots": "node scripts/hero-shots.mjs"
   },
   "dependencies": {
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource-variable/space-grotesk": "^5.3.0",
     "lenis": "^1.3.26",
     "motion": "^14.0.0",
     "react": "^19.3.0",

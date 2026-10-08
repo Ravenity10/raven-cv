@@ -38,6 +38,7 @@ export default function ProjectCard({ project, onOpen }) {
       <m.article
         onPointerMove={onPointerMove}
         onPointerLeave={reset}
+        data-cursor="view"
         style={reduce ? undefined : { rotateX, rotateY }}
         whileHover={reduce ? undefined : { y: -4 }}
         className="spotlight hover-glow group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-sm transition-[border-color,box-shadow] duration-300 hover:border-accent has-[button:focus-visible]:border-accent has-[button:focus-visible]:ring-2 has-[button:focus-visible]:ring-ring has-[button:focus-visible]:ring-offset-2 has-[button:focus-visible]:ring-offset-bg"

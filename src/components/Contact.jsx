@@ -4,6 +4,7 @@ import { contact, profile } from '../data/profile.js';
 import SectionHeading from './SectionHeading.jsx';
 import Reveal, { revealItem } from './Reveal.jsx';
 import CvLink from './CvLink.jsx';
+import { copyEmail } from '../hooks/copyEmail.js';
 
 export default function Contact() {
   const [copied, setCopied] = useState(false);
@@ -14,14 +15,8 @@ export default function Contact() {
     return () => clearTimeout(timer);
   }, [copied]);
 
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(profile.email);
-      setCopied(true);
-    } catch {
-      // Clipboard blocked: the mailto link is still available.
-    }
-  };
+  // The toast announces the result; the button label also confirms it briefly.
+  const copy = async () => setCopied(await copyEmail());
 
   return (
     <section id="contact" aria-labelledby="contact-title" className="py-20 md:py-28">
@@ -60,13 +55,10 @@ export default function Contact() {
               >
                 {copied ? contact.copiedLabel : contact.copyLabel}
               </button>
-              <span className="sr-only" role="status" aria-live="polite">
-                {copied ? contact.copiedLabel : ''}
-              </span>
             </div>
           </m.div>
 
-          <m.div variants={revealItem} className="spotlight rounded-3xl border border-line bg-surface p-8 md:p-10">
+          <m.div variants={revealItem} data-cursor className="spotlight rounded-3xl border border-line bg-surface p-8 md:p-10">
             <p className="font-mono text-sm text-muted">{contact.locationLabel}</p>
             <address className="mt-2 font-display text-2xl font-bold not-italic leading-snug tracking-tight">
               {profile.location}
