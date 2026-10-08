@@ -9,7 +9,7 @@ import { scrollToTarget } from '../hooks/useSmoothScroll.js';
 // not scroll listeners. The ring around the arrow shows scroll progress; Motion batches the
 // updates into its requestAnimationFrame loop. Styles: .back-to-top in index.css.
 
-const RADIUS = 15;
+const RADIUS = 18.5; // the ring sits just outside the 32px badge
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 // 0, 0.05 ... 1: enough steps for the lift to follow the footer smoothly.
 const FOOTER_THRESHOLDS = Array.from({ length: 21 }, (_, index) => index / 20);
@@ -54,48 +54,49 @@ export default function BackToTop() {
   return (
     <AnimatePresence>
       {visible && (
+        // Same pill as the header actions: glass, hairline border, brand-gradient badge.
         <m.button
           key="back-to-top"
           type="button"
-          aria-label={ui.backToTopLabel}
           onClick={() => scrollToTarget('hero', { duration: 1.2 })}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: -lift }}
           exit={{ opacity: 0, y: 12 - lift }}
           transition={transition}
-          className="back-to-top group"
+          className="back-to-top group glass rounded-full border border-line py-1 pl-5 pr-1 text-sm font-medium text-fg transition-[border-color] hover:border-accent"
         >
-          <span className="relative grid size-8 place-items-center">
-            <svg width="32" height="32" viewBox="0 0 36 36" aria-hidden="true" className="absolute inset-0 size-full -rotate-90">
-              <circle cx="18" cy="18" r={RADIUS} className="back-to-top-track" />
+          {ui.backToTop}
+          <span aria-hidden="true" className="relative grid size-10 place-items-center">
+            <svg width="40" height="40" viewBox="0 0 40 40" className="absolute inset-0 size-full -rotate-90">
+              <circle cx="20" cy="20" r={RADIUS} className="back-to-top-track" />
               <circle
                 ref={(element) => {
                   ringRef.current = element;
                   setRing(scrollYProgress.get());
                 }}
-                cx="18"
-                cy="18"
+                cx="20"
+                cy="20"
                 r={RADIUS}
                 strokeDasharray={CIRCUMFERENCE}
                 className="back-to-top-ring"
               />
             </svg>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-              className="back-to-top-arrow"
-            >
-              <path d="M12 19V5M5 12l7-7 7 7" />
-            </svg>
+            <span className="grid size-8 place-items-center rounded-full bg-brand-strong text-white">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="back-to-top-arrow"
+              >
+                <path d="M12 19V5M5 12l7-7 7 7" />
+              </svg>
+            </span>
           </span>
-          <span aria-hidden="true">{ui.backToTop}</span>
         </m.button>
       )}
     </AnimatePresence>

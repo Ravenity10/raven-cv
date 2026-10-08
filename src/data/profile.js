@@ -40,9 +40,8 @@ export const ui = {
   themeToLight: 'Switch to light theme',
   themeToDark: 'Switch to dark theme',
   primaryNav: 'Primary',
-  // Floating button (BackToTop.jsx): visible label and its accessible name.
-  backToTop: 'top',
-  backToTopLabel: 'Back to top',
+  // Floating button (BackToTop.jsx); the visible label is also its accessible name.
+  backToTop: 'Back to top',
 };
 
 // Boot screen shown while fonts, hero assets and the page load (Loader.jsx).
@@ -158,7 +157,6 @@ export const contact = {
 
 export const footer = {
   rights: 'All rights reserved.',
-  backToTop: 'Back to top',
 };
 
 export const projectsCopy = {
