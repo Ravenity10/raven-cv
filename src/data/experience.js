@@ -1,11 +1,17 @@
 import { YEARS_EXPERIENCE } from './profile.js';
 
 // From John_Raven_Delos_Reyes_Resume.pdf (public/cv/). Keep in sync when the CV changes.
-// Roles are listed newest first; a company with several roles groups them together.
+// Rendered as a deployment history (Experience.jsx): one release per role, newest first.
+// The first entry is the current role (HEAD). `start` / `end` are "YYYY-MM"; `end: null`
+// means present. The release label and duration are worked out from these dates.
 export const experienceCopy = {
-  heading: 'experience',
-  title: `${YEARS_EXPERIENCE} years of WordPress, from junior developer to team lead.`,
-  intro: 'Building custom themes and plugins for e-commerce, lead generation and content sites, and now leading a development and digital marketing team.',
+  heading: 'git log',
+  title: 'Deployment history.',
+  intro: `${YEARS_EXPERIENCE} years of WordPress, from junior developer to team lead.`,
+  head: 'HEAD',
+  now: 'now',
+  present: 'present',
+  techLabel: 'Technologies',
   educationHeading: 'Education',
   cvLabel: 'Download full CV',
 };
@@ -13,47 +19,40 @@ export const experienceCopy = {
 export const experience = [
   {
     company: 'TechZ Digital',
-    period: 'May 2022 - Present',
-    roles: [
-      {
-        title: 'Senior WordPress Developer',
-        period: 'Nov 2024 - Present',
-        points: [
-          'Lead a web development and digital marketing team, handling task allocation, code review and delivery across concurrent client projects.',
-          'Build custom WordPress themes and plugins with Advanced Custom Fields and custom post types, following WordPress Coding Standards and OOP principles for modular, maintainable code.',
-          'Develop custom AJAX filtering and feed systems with optimized queries to keep content-heavy sites fast.',
-          'Configure and troubleshoot WooCommerce stores, Gravity Forms workflows and SMTP email delivery (Brevo) across client sites.',
-          'Diagnose and resolve server-level issues on Plesk-hosted environments, including PHP configuration, caching, deployments and migrations.',
-          'Handle site security incidents: malware cleanup, recovery, hardening and migration to clean environments.',
-        ],
-      },
-      {
-        title: 'Mid Web Developer',
-        period: 'May 2022 - Nov 2024',
-        points: [
-          'Designed and implemented custom WordPress themes with Advanced Custom Fields and custom post types to meet diverse client needs.',
-          'Used page builders such as Divi, Elementor and Cornerstone to streamline development, improving project turnaround times by about 20%.',
-          'Converted design mockups into fully functional websites using HTML, JavaScript and AJAX.',
-          'Developed and maintained responsive websites with HTML, CSS, JavaScript and jQuery.',
-        ],
-      },
+    role: 'Senior WordPress Developer',
+    start: '2024-11',
+    end: null,
+    points: [
+      'Lead the web development team: task allocation, code review and delivery.',
+      'Custom themes and plugins with ACF and custom post types, to WordPress Coding Standards.',
+      'WooCommerce, Gravity Forms and SMTP setups, Plesk server fixes and malware recovery.',
     ],
+    tech: ['ACF Pro', 'Custom post types', 'WooCommerce', 'Gravity Forms', 'Plesk', 'Brevo SMTP'],
+  },
+  {
+    company: 'TechZ Digital',
+    role: 'Mid Web Developer',
+    start: '2022-05',
+    end: '2024-11',
+    points: [
+      'Custom WordPress themes with ACF and custom post types for a wide range of clients.',
+      'Divi, Elementor and Cornerstone where they fit, cutting turnaround by about 20%.',
+      'Responsive builds from design mockups in HTML, CSS, JavaScript, jQuery and AJAX.',
+    ],
+    tech: ['ACF', 'Divi', 'Elementor', 'Cornerstone', 'jQuery', 'AJAX'],
   },
   {
     company: 'IFormatLogic',
-    location: 'Palanginan, Iba, Zambales, Philippines',
-    period: 'Oct 2020 - May 2022',
-    roles: [
-      {
-        title: 'Junior WordPress Developer',
-        period: 'Oct 2020 - May 2022',
-        points: [
-          'Built custom WordPress themes from the ground up with Advanced Custom Fields, using builders such as Elementor where they sped up delivery.',
-          'Translated mockups into working websites, adding AJAX and JavaScript interactions.',
-          'Developed and maintained websites with HTML, CSS, JavaScript and jQuery, with a focus on responsive design.',
-        ],
-      },
+    role: 'Junior WordPress Developer',
+    location: 'Iba, Zambales',
+    start: '2020-10',
+    end: '2022-05',
+    points: [
+      'Custom themes built from the ground up with Advanced Custom Fields.',
+      'Mockups turned into working sites with AJAX and JavaScript interactions.',
+      'Responsive HTML, CSS, JavaScript and jQuery builds and maintenance.',
     ],
+    tech: ['ACF', 'Elementor', 'HTML & CSS', 'JavaScript', 'jQuery'],
   },
 ];
 

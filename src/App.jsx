@@ -15,6 +15,7 @@ import Cursor from './components/Cursor.jsx';
 import Toast from './components/Toast.jsx';
 import Loader from './components/Loader.jsx';
 import BackToTop from './components/BackToTop.jsx';
+import CommandPalette from './components/CommandPalette.jsx';
 
 export default function App() {
   useSmoothScroll();
@@ -41,15 +42,17 @@ export default function App() {
       <Header />
       <main id="main" tabIndex={-1} className="outline-none">
         <Hero />
+        {/* Order matches the section labels: 01 whoami, 02 git log, 03 projects, 04 stack. */}
         <About />
-        <Skills />
-        <Projects />
         <Experience />
+        <Projects />
+        <Skills />
         <Services />
         <Contact />
       </main>
       <Footer />
       <BackToTop />
+      <CommandPalette />
       <Toast />
       <Loader />
       <Cursor />

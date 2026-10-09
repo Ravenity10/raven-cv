@@ -24,11 +24,18 @@ function apply(theme, fade) {
 // until the user picks a theme.
 // toggleTheme({ fade: true }) cross-fades colours; ThemeToggle uses it when the
 // View Transitions API is unavailable.
+// Every component using the hook (toggle, command palette, footer) follows the class on
+// <html>, so a switch made from any of them updates them all.
 export function useTheme() {
   const [theme, setTheme] = useState('light');
 
   useLayoutEffect(() => {
-    setTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    const root = document.documentElement;
+    const read = () => setTheme(root.classList.contains('dark') ? 'dark' : 'light');
+    read();
+    const observer = new MutationObserver(read);
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
   }, []);
 
   const toggleTheme = useCallback(({ fade = false } = {}) => {

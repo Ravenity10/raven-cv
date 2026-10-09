@@ -1,7 +1,7 @@
 {
   "name": "raven-portfolio",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "screenshots": "node scripts/screenshot.mjs",
     "brand-assets": "node scripts/brand-assets.mjs",
-    "hero-shots": "node scripts/hero-shots.mjs"
+    "hero-shots": "node scripts/hero-shots.mjs",
+    "v2-shots": "node scripts/v2-shots.mjs"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.3.0",

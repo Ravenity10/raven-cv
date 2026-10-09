@@ -4,17 +4,20 @@ import { revealItem } from './Reveal.jsx';
 import { toneAt } from './tones.js';
 
 const MAX_TILT = 6;
+const MAX_TAGS = 3;
 const spring = { stiffness: 220, damping: 20, mass: 0.6 };
 
 export function ScreenshotPlaceholder({ name, host }) {
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-accent-soft p-6 text-center">
-      <span className="font-display text-2xl font-bold text-fg">{name}</span>
-      <span className="font-mono text-xs text-muted">{host}</span>
+    <div className="flex h-full w-full flex-col items-center justify-center gap-1 bg-accent-soft p-3 text-center">
+      <span className="font-display text-base font-bold text-fg sm:text-2xl">{name}</span>
+      <span className="font-mono text-[0.65rem] text-muted sm:text-xs">{host}</span>
     </div>
   );
 }
 
+// Compact card: thumbnail, name, a one-line description and up to three tags. Everything
+// else (features, the live link) is in the modal (ProjectModal.jsx).
 export default function ProjectCard({ project, onOpen }) {
   const reduce = useReducedMotion();
   const px = useMotionValue(0.5);
@@ -34,21 +37,21 @@ export default function ProjectCard({ project, onOpen }) {
   };
 
   return (
-    <m.li variants={revealItem} className="[perspective:1000px]">
+    <m.li variants={revealItem} className="min-w-0 [perspective:1000px]">
       <m.article
         onPointerMove={onPointerMove}
         onPointerLeave={reset}
         data-cursor="view"
         style={reduce ? undefined : { rotateX, rotateY }}
         whileHover={reduce ? undefined : { y: -4 }}
-        className="spotlight hover-glow group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-sm transition-[border-color,box-shadow] duration-300 hover:border-accent has-[button:focus-visible]:border-accent has-[button:focus-visible]:ring-2 has-[button:focus-visible]:ring-ring has-[button:focus-visible]:ring-offset-2 has-[button:focus-visible]:ring-offset-bg"
+        className="spotlight hover-glow group flex h-full flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-sm transition-[border-color,box-shadow] duration-300 hover:border-accent has-[button:focus-visible]:border-accent has-[button:focus-visible]:ring-2 has-[button:focus-visible]:ring-ring has-[button:focus-visible]:ring-offset-2 has-[button:focus-visible]:ring-offset-bg sm:rounded-2xl"
       >
         <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-line bg-surface-2">
           {project.image ? (
             <img
               src={project.image.srcSmall}
               srcSet={`${project.image.srcSmall} 640w, ${project.image.src} ${project.image.width}w`}
-              sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw"
+              sizes="(min-width: 1024px) 360px, 50vw"
               width={project.image.width}
               height={project.image.height}
               alt={projectsCopy.screenshotAlt(project.name)}
@@ -60,9 +63,8 @@ export default function ProjectCard({ project, onOpen }) {
             <ScreenshotPlaceholder name={project.name} host={project.host} />
           )}
         </div>
-        <div className="flex flex-1 flex-col p-5">
-          <p className="font-mono text-xs text-muted">{project.host}</p>
-          <h3 className="mt-1 font-display text-xl font-bold tracking-tight">
+        <div className="flex flex-1 flex-col p-3 sm:p-5">
+          <h3 className="font-display text-sm font-bold leading-snug tracking-tight sm:text-lg">
             {/* The ::after overlay stretches this button over the whole card. */}
             <button
               type="button"
@@ -74,20 +76,16 @@ export default function ProjectCard({ project, onOpen }) {
               {project.name}
             </button>
           </h3>
-          <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted">{project.description}</p>
-          <ul className="mt-4 flex flex-wrap gap-1.5" aria-label={projectsCopy.tagsLabel}>
-            {project.tags.map((tag, index) => (
-              <li key={tag} className={`chip ${toneAt(index)} !px-2.5 !py-1 !text-xs`}>
-                {tag}
+          <p className="mt-1 truncate text-xs text-muted sm:text-sm">
+            {project.description}
+          </p>
+          <ul className="mt-2.5 flex flex-wrap gap-1 sm:mt-4 sm:gap-1.5" aria-label={projectsCopy.tagsLabel}>
+            {project.tags.slice(0, MAX_TAGS).map((tag, index) => (
+              <li key={tag} className={`chip ${toneAt(index)} max-w-full !px-1.5 !py-px !text-[0.62rem] sm:!px-2.5 sm:!py-1 sm:!text-xs`}>
+                <span className="truncate">{tag}</span>
               </li>
             ))}
           </ul>
-          <span aria-hidden="true" className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-semibold text-accent">
-            {projectsCopy.viewDetails}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-1">
-              <path d="M5 12h14M13 5l7 7-7 7" />
-            </svg>
-          </span>
         </div>
       </m.article>
     </m.li>

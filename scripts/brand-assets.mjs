@@ -32,8 +32,8 @@ const og = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" vi
   <rect x="80" y="80" width="72" height="72" rx="16" fill="${INK}"/>
   <text x="116" y="128" text-anchor="middle" font-family="${FONT}" font-size="30" font-weight="800" fill="${PAPER}">JR</text>
   <text x="80" y="300" font-family="${FONT}" font-size="76" font-weight="800" fill="${INK}">John Raven M. Delos Reyes</text>
-  <text x="80" y="390" font-family="${FONT}" font-size="54" font-weight="700" fill="${ACCENT}">WordPress Developer</text>
-  <text x="80" y="520" font-family="${FONT}" font-size="30" fill="#545a65">Custom themes · ACF · Custom post types · Plugins · Integrations</text>
+  <text x="80" y="390" font-family="${FONT}" font-size="54" font-weight="700" fill="${ACCENT}">Web Developer</text>
+  <text x="80" y="520" font-family="${FONT}" font-size="30" fill="#545a65">WordPress focus · Custom themes · ACF · Plugins · APIs · React</text>
 </svg>
 `;
 

@@ -29,6 +29,8 @@ export function onBoot(callback) {
 }
 function markBooted() {
   booted = true;
+  // CSS hooks for entrances that wait for the loader (the hero prompt typing, index.css).
+  document.documentElement.classList.add('is-booted');
   listeners.forEach((callback) => callback());
   listeners.clear();
 }

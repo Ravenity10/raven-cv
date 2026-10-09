@@ -11,6 +11,16 @@ const base = import.meta.env.BASE_URL;
 // The prefix is stripped for display.
 const clean =(text) => text.replace(/^\[inferred\]\s*/i, '');
 
+// Filter chips above the grid. Each filter matches the projects whose sites.json tags
+// include any of its `tags`; "All" has none and matches everything.
+export const projectFilters = [
+  { id: 'all', label: 'All' },
+  { id: 'theme', label: 'Custom Theme', tags: ['Custom theme', 'Child theme', 'ACF Flexible Content'] },
+  { id: 'plugin', label: 'Plugin', tags: ['Plugin development'] },
+  { id: 'woocommerce', label: 'WooCommerce', tags: ['WooCommerce'] },
+  { id: 'integration', label: 'Integration', tags: ['Stripe', 'Webhooks', 'Mailchimp', 'SMTP', 'Cloudflare', 'GA4'] },
+];
+
 export const projects = sites.map((site) => {
   const slug = slugify(site.name);
   const screen = screens[slug];
@@ -22,6 +32,7 @@ export const projects = sites.map((site) => {
     description: clean(site.description),
     features: site.features.map(clean),
     tags: site.tags,
+    filters: projectFilters.filter((filter) => !filter.tags || filter.tags.some((tag) => site.tags.includes(tag))).map((filter) => filter.id),
     image: screen
       ? {
           src: `${base}screens/${slug}.webp`,

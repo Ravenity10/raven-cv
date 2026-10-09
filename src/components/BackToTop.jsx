@@ -3,8 +3,8 @@ import { AnimatePresence, m, useMotionValueEvent, useReducedMotion, useScroll } 
 import { ui } from '../data/profile.js';
 import { scrollToTarget } from '../hooks/useSmoothScroll.js';
 
-// Floating "top" button, bottom-right. It appears once the sentinel at the end of the hero
-// ([data-hero-sentinel], Hero.jsx) has scrolled above the viewport, and lifts by the visible
+// Floating "top" button, bottom-right. It appears once the whole hero (#hero) has scrolled
+// above the viewport, and lifts by the visible
 // height of the footer so it never covers the footer links. Both are IntersectionObservers,
 // not scroll listeners. The ring around the arrow shows scroll progress; Motion batches the
 // updates into its requestAnimationFrame loop. Styles: .back-to-top in index.css.
@@ -27,15 +27,17 @@ export default function BackToTop() {
   useMotionValueEvent(scrollYProgress, 'change', setRing);
 
   useEffect(() => {
-    const sentinel = document.querySelector('[data-hero-sentinel]');
+    // The hero itself, not a 1px marker at its end: the hero is always on screen at the top,
+    // so even a jump past it (palette, anchor link) changes its intersection and is noticed.
+    const hero = document.getElementById('hero');
     const footer = document.querySelector('footer');
     const observers = [];
 
-    if (sentinel) {
+    if (hero) {
       const heroObserver = new IntersectionObserver(([entry]) => {
         setVisible(!entry.isIntersecting && entry.boundingClientRect.top < 0);
       });
-      heroObserver.observe(sentinel);
+      heroObserver.observe(hero);
       observers.push(heroObserver);
     }
     if (footer) {
@@ -63,9 +65,10 @@ export default function BackToTop() {
           animate={{ opacity: 1, y: -lift }}
           exit={{ opacity: 0, y: 12 - lift }}
           transition={transition}
-          className="back-to-top group glass rounded-full border border-line py-1 pl-5 pr-1 text-sm font-medium text-fg transition-[border-color] hover:border-accent"
+          className="back-to-top group glass rounded-full border border-line p-1 text-sm font-medium text-fg transition-[border-color] hover:border-accent sm:pl-5"
         >
-          {ui.backToTop}
+          {/* Icon only on phones, so less of the page sits under it; the label stays its name. */}
+          <span className="max-sm:sr-only">{ui.backToTop}</span>
           <span aria-hidden="true" className="relative grid size-10 place-items-center">
             <svg width="40" height="40" viewBox="0 0 40 40" className="absolute inset-0 size-full -rotate-90">
               <circle cx="20" cy="20" r={RADIUS} className="back-to-top-track" />

@@ -1,66 +1,132 @@
+import { Fragment, useState } from 'react';
 import { m } from 'motion/react';
 import { skillsCopy } from '../data/profile.js';
-import { skills, toolbox } from '../data/skills.js';
+import { stackGroups } from '../data/skills.js';
 import SectionHeading from './SectionHeading.jsx';
 import Reveal, { revealItem } from './Reveal.jsx';
-import Marquee from './Marquee.jsx';
 import { toneAt } from './tones.js';
 
-// One endless row of tool chips (see Marquee.jsx for how the loop stays seamless).
-// `pr-2` matches the gap so the spacing is even where one copy meets the next.
-function ToolRow({ items, offset, reverse }) {
+// The stack as a stack.json file: one line per group. Hovering or focusing a line (or its
+// card below) makes that group active: the line and card light up and the comment at the
+// end of the file shows the group's summary.
+
+function LineNumber({ n }) {
   return (
-    <Marquee
-      items={items}
-      reverse={reverse}
-      secondsPerCopy={45}
-      listClassName="gap-2 pr-2"
-      renderItem={(tool, index) => (
-        <li key={tool} className={`chip font-mono ${toneAt(index + offset)}`}>
-          {tool}
-        </li>
-      )}
-    />
+    <span aria-hidden="true" className="w-10 shrink-0 select-none pr-4 text-right text-muted">
+      {n}
+    </span>
+  );
+}
+
+function GroupLine({ group, n, last, active, onActivate }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onMouseEnter={onActivate}
+      onFocus={onActivate}
+      onClick={onActivate}
+      className={`code-line flex w-full py-0.5 pr-4 text-left transition-colors ${active ? 'bg-accent-soft' : 'hover:bg-surface-2'}`}
+    >
+      <LineNumber n={n} />
+      {/* Hanging indent: wrapped values line up two characters in from the key. */}
+      <span className="block min-w-0 pl-[4ch] -indent-[2ch]">
+        <span className="whitespace-nowrap text-(--blue)">&quot;{group.id}&quot;</span>
+        <span className="text-muted">: [</span>
+        {group.items.map((item, index) => (
+          <Fragment key={item}>
+            <span className="whitespace-nowrap text-(--teal)">&quot;{item}&quot;</span>
+            {index < group.items.length - 1 && <span className="text-muted">, </span>}
+          </Fragment>
+        ))}
+        <span className="text-muted">]{last ? '' : ','}</span>
+        {group.primary && <span className="italic text-muted"> {`// ${skillsCopy.primaryBadge}`}</span>}
+      </span>
+    </button>
   );
 }
 
 export default function Skills() {
-  const half = Math.ceil(toolbox.length / 2);
+  const [active, setActive] = useState(stackGroups[0].id);
+  const current = stackGroups.find((group) => group.id === active);
+  const lastLine = stackGroups.length + 4;
 
   return (
-    <section id="skills" aria-labelledby="skills-title" className="border-y border-line bg-surface-2/40 py-20 md:py-28">
+    <section id="skills" aria-labelledby="skills-title" className="section-pad border-t border-line bg-surface-2/40">
       <div className="container-page">
-        <SectionHeading id="skills" index={2} label={skillsCopy.heading} title={skillsCopy.title} />
+        <SectionHeading id="skills" index={4} label={skillsCopy.heading} title={skillsCopy.title} intro={skillsCopy.intro} />
 
-        <Reveal as="ul" stagger={0.08} className="grid gap-4 sm:grid-cols-2">
-          {skills.map((skill, index) => (
-            <m.li
-              key={skill.id}
-              variants={revealItem}
-              data-cursor
-              className={`spotlight hover-glow ${toneAt(index)} rounded-2xl border border-line bg-surface p-6 transition-[border-color,box-shadow] duration-300 hover:border-(--tone) md:p-8`}
-            >
-              <span className="eyebrow text-(--tone)">{String(index + 1).padStart(2, '0')}</span>
-              <h3 className="mt-3 font-display text-2xl font-bold tracking-tight">{skill.title}</h3>
-              <p className="mt-2 text-muted">{skill.summary}</p>
-              <ul className="mt-5 space-y-2 border-t border-line pt-5">
-                {skill.points.map((point) => (
-                  <li key={point} className="flex gap-3 text-sm leading-relaxed">
-                    <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-(--tone)" />
-                    {point}
-                  </li>
-                ))}
-              </ul>
-            </m.li>
-          ))}
+        <Reveal className="code-window overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-black/5">
+          <div className="flex items-center gap-2 border-b border-line bg-surface-2/60 px-4 py-2.5 font-mono text-xs text-muted">
+            <span aria-hidden="true" className="size-2 rounded-full bg-(--teal)" />
+            <span className="text-fg">{skillsCopy.fileName}</span>
+            <span className="hidden sm:inline">· {skillsCopy.fileMeta(stackGroups.length)}</span>
+            <span aria-hidden="true" className="ml-auto hidden md:inline">
+              {skillsCopy.hint} &darr;
+            </span>
+          </div>
+          <div className="py-3 font-mono text-[0.72rem] leading-[1.75] [font-variant-ligatures:none] sm:text-[0.8rem]">
+            <p className="code-line flex">
+              <LineNumber n={1} />
+              <span className="text-muted">{'{'}</span>
+            </p>
+            {stackGroups.map((group, index) => (
+              <GroupLine
+                key={group.id}
+                group={group}
+                n={index + 2}
+                last={index === stackGroups.length - 1}
+                active={active === group.id}
+                onActivate={() => setActive(group.id)}
+              />
+            ))}
+            <p className="code-line flex">
+              <LineNumber n={stackGroups.length + 2} />
+              <span className="text-muted">{'}'}</span>
+            </p>
+            <p aria-hidden="true" className="code-line flex">
+              <LineNumber n={stackGroups.length + 3} />
+            </p>
+            <p className="code-line flex pr-4">
+              <LineNumber n={lastLine} />
+              <span className="min-w-0 italic text-muted">
+                {'// '}
+                {current.id}: {current.summary}
+              </span>
+            </p>
+          </div>
         </Reveal>
 
-        <Reveal className="mt-14">
-          <h3 className="eyebrow mb-5">{skillsCopy.toolboxHeading}</h3>
-          <div className="space-y-3">
-            <ToolRow items={toolbox.slice(0, half)} offset={0} />
-            <ToolRow items={toolbox.slice(half)} offset={2} reverse />
-          </div>
+        <Reveal as="ul" stagger={0.06} className="mt-3 grid grid-cols-2 gap-3 sm:mt-4 lg:grid-cols-4">
+          {stackGroups.map((group, index) => {
+            const isActive = active === group.id;
+            return (
+              <m.li
+                key={group.id}
+                variants={revealItem}
+                onMouseEnter={() => setActive(group.id)}
+                data-cursor
+                className={`spotlight ${toneAt(index)} rounded-xl border bg-surface p-3.5 transition-[border-color,box-shadow] duration-300 sm:rounded-2xl sm:p-5 ${
+                  isActive ? 'border-(--tone) shadow-[0_18px_40px_-24px_var(--tone)]' : 'border-line'
+                }`}
+              >
+                <p className="font-mono text-[0.68rem] text-(--tone)">
+                  {String(index + 1).padStart(2, '0')}
+                  {group.primary && ` · ${skillsCopy.primaryBadge}`}
+                </p>
+                <h3 className="mt-1.5 font-display text-base font-bold tracking-tight sm:text-lg">{group.title}</h3>
+                <p className="mt-1 text-xs leading-relaxed text-muted sm:text-sm">{group.summary}</p>
+                <ul className="mt-3 hidden space-y-1.5 border-t border-line pt-3 md:block">
+                  {group.points.map((point) => (
+                    <li key={point} className="flex gap-2 text-xs leading-relaxed">
+                      <span aria-hidden="true" className="mt-[0.45rem] size-1 shrink-0 rounded-full bg-(--tone)" />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </m.li>
+            );
+          })}
         </Reveal>
       </div>
     </section>

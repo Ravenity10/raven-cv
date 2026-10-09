@@ -1,8 +1,9 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import { m, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { hero } from '../data/profile.js';
 import { scrollToTarget } from '../hooks/useSmoothScroll.js';
 import { useScramble } from '../hooks/useScramble.js';
+import { useClock } from '../hooks/useClock.js';
 import StarField from './StarField.jsx';
 import Marquee from './Marquee.jsx';
 import { onBoot } from './Loader.jsx';
@@ -34,18 +35,50 @@ function highlight(code) {
   return parts;
 }
 
-// Live local time for the status row. The pre-rendered HTML shows a placeholder,
-// so server and client markup match until the first tick.
-function useClock(timeZone) {
-  const [time, setTime] = useState(null);
-  useEffect(() => {
-    const format = new Intl.DateTimeFormat('en-GB', { timeZone, hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' });
-    const tick = () => setTime(format.format(new Date()));
-    tick();
-    const timer = setInterval(tick, 1000);
-    return () => clearInterval(timer);
-  }, [timeZone]);
-  return time;
+// Terminal prompt above the name: the command types out one character at a time, then the
+// output line (the role) appears. Pure CSS (.type-* in index.css) so it works from the
+// pre-rendered HTML; it waits, paused, until the boot loader has gone (html.is-booted).
+// Monospace characters are exactly 1ch wide, so the caret steps along with translateX.
+const TYPE_START = 0.25; // seconds after boot
+const TYPE_STEP = 0.085; // seconds per character
+
+function PromptLine() {
+  const { user, path, command } = hero.prompt;
+  const typed = TYPE_START + command.length * TYPE_STEP;
+  return (
+    <div
+      className="hero-gap-sm font-mono text-[0.8rem] sm:text-[0.85rem]"
+      style={{ '--t0': `${TYPE_START}s`, '--step': `${TYPE_STEP}s`, '--n': command.length, '--t-out': `${(typed + 0.25).toFixed(2)}s` }}
+    >
+      <p className="hero-type">
+        <span className="text-accent">{user}</span>
+        <span className="text-muted">{path}</span>{' '}
+        <span className="sr-only">{command}</span>
+        <span aria-hidden="true" className="relative inline-block whitespace-pre">
+          {[...command].map((char, index) => (
+            <span key={index} className="type-char" style={{ '--i': index }}>
+              {char}
+            </span>
+          ))}
+          <span className="type-caret-wrap absolute left-0 top-0 h-full">
+            <span className="type-caret block h-full w-[0.55ch] bg-accent" />
+          </span>
+        </span>
+      </p>
+      <p className="hero-type type-out mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 uppercase tracking-[0.12em] text-muted">
+        <span aria-hidden="true" className="text-accent">
+          &gt;
+        </span>
+        <span className="text-fg">{hero.eyebrow}</span>
+        <span aria-hidden="true">/</span>
+        <span>{hero.eyebrowFocus}</span>
+        <span aria-hidden="true" className="text-accent">
+          /
+        </span>
+        <span className="text-accent">{hero.eyebrowPlace}</span>
+      </p>
+    </div>
+  );
 }
 
 function StatusValue({ item, clock }) {
@@ -123,14 +156,7 @@ export default function Hero() {
 
       <div className="hero-body container-page relative grid flex-1 content-center gap-12 lg:grid-cols-[1.45fr_1fr] lg:items-center">
         <m.div style={{ opacity: copyOpacity }} className="min-w-0">
-          <p className="anim-fade-up eyebrow hero-gap-sm flex flex-wrap items-center gap-x-2.5 gap-y-1 uppercase tracking-[0.06em] sm:gap-x-3 sm:tracking-[0.16em]" style={delay(0)}>
-            <span aria-hidden="true" className="hidden h-px w-8 bg-current sm:block" />
-            <span>{hero.eyebrow}</span>
-            <span aria-hidden="true" className="text-accent">
-              /
-            </span>
-            <span className="text-accent">{hero.eyebrowPlace}</span>
-          </p>
+          <PromptLine />
 
           {/* The real name is the accessible label; the per-letter spans that scramble are hidden. */}
           <h1
@@ -166,8 +192,8 @@ export default function Hero() {
             {hero.tagline}
           </p>
 
-          <div className="anim-fade-up hero-gap flex flex-wrap gap-3" style={delay(afterHeading + 0.08)}>
-            <a href={hero.primaryCta.href} className="btn-brand inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold">
+          <div className="anim-fade-up hero-gap flex flex-wrap gap-2.5 min-[400px]:gap-3" style={delay(afterHeading + 0.08)}>
+            <a href={hero.primaryCta.href} className="btn-brand inline-flex items-center gap-2 rounded-full px-4 py-3 font-semibold min-[400px]:px-6">
               {hero.primaryCta.label}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M5 12h14M13 5l7 7-7 7" />
@@ -176,7 +202,7 @@ export default function Hero() {
             <a
               href={hero.secondaryCta.href}
               onClick={(event) => onCta(event, hero.secondaryCta.href)}
-              className="glass inline-flex items-center gap-2 rounded-full border border-line px-6 py-3 font-medium transition-[transform,border-color] hover:-translate-y-0.5 hover:border-accent"
+              className="glass inline-flex items-center gap-2 rounded-full border border-line px-4 py-3 font-medium min-[400px]:px-6 transition-[transform,border-color] hover:-translate-y-0.5 hover:border-accent"
             >
               {hero.secondaryCta.label}
             </a>
@@ -228,8 +254,6 @@ export default function Hero() {
       <div className="anim-fade-up relative" style={delay(afterHeading + 0.24)}>
         <SkillTicker />
       </div>
-      {/* Once this scrolls above the viewport, the floating back-to-top button shows (BackToTop.jsx). */}
-      <span data-hero-sentinel aria-hidden="true" className="pointer-events-none absolute bottom-0 left-0 h-px w-px" />
     </section>
   );
 }
